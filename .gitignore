@@ -1,2 +1,6 @@
 # Credentials
 credentials.json
+token.json
+
+# Dependencies
+node_modules/
