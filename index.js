@@ -1,6 +1,9 @@
 const fs = require('fs');
 const readline = require('readline');
 const { google } = require('googleapis');
+const nodemailer = require('nodemailer');
+
+require('dotenv').config();
 
 // scope for readonly
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
@@ -35,12 +38,35 @@ const getNewToken = (oAuth2Client, callback) => {
 const authorize = async (credentials, callback) => {
   const { client_secret, client_id, redirect_uris } = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
-  
+
   // check if a token exists
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getNewToken(oAuth2Client, callback);
     oAuth2Client.setCredentials(JSON.parse(token));
     callback(oAuth2Client);
+  });
+};
+
+const transport = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAILUSER,
+    pass: process.env.EMAILPASS,
+  },
+});
+
+const sendMailTo = (email, text) => {
+  transport.sendMail({
+    from: process.env.EMAILUSER,
+    to: email,
+    subject: 'Homework / Absence Status',
+    text,
+  }, (err, info) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(`Email sent: ${info.response}`);
+    }
   });
 };
 
@@ -76,12 +102,17 @@ const listHomework = async (auth) => {
   // preparing the final output
   const assignedStudents = students.map((item, index) => ({
     name: `${item[0]} ${item[1]}`,
+    email: item[2],
     submissions: assignHomework(submissions[index]),
-    percentage: `${item[3]}`,
+    percentage: item[3],
     absences: attendances[index][0],
   }));
 
   console.log(assignedStudents);
+  // sendMailTo(process.env.EMAILUSER, JSON.stringify(assignedStudents[0]));
+  if (process.argv[2] === 'email') {
+    assignedStudents.forEach(student => sendMailTo(student.email, student));
+  }
 
   return assignedStudents;
 };
