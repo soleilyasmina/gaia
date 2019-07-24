@@ -111,7 +111,7 @@ const listHomework = async (auth) => {
   console.log(assignedStudents);
   // sendMailTo(process.env.EMAILUSER, JSON.stringify(assignedStudents[0]));
   if (process.argv[2] === 'email') {
-    assignedStudents.forEach(student => sendMailTo(student.email, student));
+    assignedStudents.forEach(student => sendMailTo(student.email, JSON.stringify(student)));
   }
 
   return assignedStudents;
