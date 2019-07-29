@@ -108,12 +108,11 @@ const listHomework = async (auth) => {
     absences: attendances[index][0],
   }));
 
-  console.log(assignedStudents);
-  // sendMailTo(process.env.EMAILUSER, JSON.stringify(assignedStudents[0]));
   if (process.argv[2] === 'email') {
     assignedStudents.forEach(student => sendMailTo(student.email, JSON.stringify(student)));
   }
 
+  console.table(assignedStudents);
   return assignedStudents;
 };
 
