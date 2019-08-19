@@ -74,25 +74,25 @@ const listHomework = async (auth) => {
   const sheets = google.sheets({ version: 'v4', auth });
   // grab lots of data
   const studentsData = await sheets.spreadsheets.values.get({
-    spreadsheetId: '1gT1ZYt2dGpnhUxG3M83lMLcX6jm9OJzM5NZX4pn_ex8',
+    spreadsheetId: process.env.SPREADSHEETID,
     range: 'Homework Completion!B6:E20',
   });
   const assignmentsData = await sheets.spreadsheets.values.get({
-    spreadsheetId: '1gT1ZYt2dGpnhUxG3M83lMLcX6jm9OJzM5NZX4pn_ex8',
+    spreadsheetId: process.env.SPREADSHEETID,
     range: 'Homework Completion!F5:BC5',
   });
   const submissionsData = await sheets.spreadsheets.values.get({
-    spreadsheetId: '1gT1ZYt2dGpnhUxG3M83lMLcX6jm9OJzM5NZX4pn_ex8',
+    spreadsheetId: process.env.SPREADSHEETID,
     range: 'Homework Completion!F6:BC20',
   });
   const attendancesData = await sheets.spreadsheets.values.get({
-    spreadsheetId: '1gT1ZYt2dGpnhUxG3M83lMLcX6jm9OJzM5NZX4pn_ex8',
+    spreadsheetId: process.env.SPREADSHEETID,
     range: 'Attendance!E11:E25',
   });
 
   const students = studentsData.data.values;
   // remove any not filled in homework
-  const assignments = assignmentsData.data.values[0].filter(item => !item.match(/[HW] [\d]/));
+  const assignments = assignmentsData.data.values[0].filter((item) => !item.match(/[HW] [\d]/));
   const submissions = submissionsData.data.values;
   const attendances = attendancesData.data.values;
 
