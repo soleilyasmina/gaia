@@ -45,7 +45,7 @@ const authorize = async (credentials, callback) => {
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getNewToken(oAuth2Client, callback);
     oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client);
+    return callback(oAuth2Client);
   });
 };
 
@@ -72,7 +72,7 @@ const sendMailTo = (email, text) => {
   });
 };
 
-const listHomework = async (auth) => {
+const provideStudentsCallback = async (auth) => {
   // it's time for us to grab some data
   const sheets = google.sheets({ version: 'v4', auth });
   // grab the individual students names
@@ -115,17 +115,22 @@ const listHomework = async (auth) => {
     absences: attendances[index][0],
     enrollment: enrollments[index][0],
     submissions: assignHomework(submissions[index]),
+    index,
   }));
-  
+
   console.table(assignedStudents);
   return assignedStudents;
 };
 
-fs.readFile('credentials.json', (err, content) => {
-  if (err) return console.log('Error loading client secret file:', err);
-  authorize(JSON.parse(content), listHomework);
-});
+const provideStudents = () => {
+  fs.readFile('credentials.json', (err, content) => {
+    if (err) return console.log('Error loading client secret file:', err);
+    return authorize(JSON.parse(content), provideStudentsCallback);
+  });
+}
+
+provideStudents();
 
 module.exports = {
-  listHomework,
+  provideStudents
 };
