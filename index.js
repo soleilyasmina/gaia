@@ -2,7 +2,7 @@ const fs = require('fs');
 const readline = require('readline');
 const { google } = require('googleapis');
 
-require('dotenv').config();
+const mailer = require('./mailer');
 
 // scope for readonly
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
@@ -86,12 +86,15 @@ const provideStudentsCallback = async (auth) => {
 
   // convert homework from formula to items
   const assignHomework = studentSubmissions => assignments.map((item, index) => {
-    const [ link, name ] = item.replace('=HYPERLINK(','').replace(/[")]/g, '').split(',');
+    let [ link, name ] = item.replace('=HYPERLINK(','').replace(/[")]/g, '').split(',');
+    if (!name) {
+      name = link;
+      link = undefined;
+    }
     return { 
-      [name]: {
-        completion: studentSubmissions[index],
-        link
-      }
+      completion: studentSubmissions[index],
+      link,
+      name
     }
   });
 
@@ -117,6 +120,8 @@ const provideStudents = async () => {
   }
 }
 
-module.exports = {
-  provideStudents
-};
+(async () => {
+  await mailer(await provideStudents());
+})();
+
+module.exports = provideStudents;
