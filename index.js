@@ -42,11 +42,13 @@ const authorize = async (credentials, callback) => {
   const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
   // check if a token exists
-  fs.readFile(TOKEN_PATH, async (err, token) => {
-    if (err) return getNewToken(oAuth2Client, callback);
+  try {
+    const token = fs.readFileSync(TOKEN_PATH)
     oAuth2Client.setCredentials(JSON.parse(token));
-    console.log('within authorize', await callback(oAuth2Client));
-  });
+    return await callback(oAuth2Client);
+  } catch (e) {
+    return getNewToken(oAuth2Client, callback);    
+  }
 };
 
 const provideStudentsCallback = async (auth) => {
@@ -103,17 +105,17 @@ const provideStudentsCallback = async (auth) => {
     submissions: assignHomework(submissions[index]),
     index,
   }));
-  console.log('within cb', assignedStudents);
   return assignedStudents;
 };
 
-const provideStudents = () => {
-  fs.readFile('credentials.json', async (err, content) => {
-    if (err) return console.log('Error loading client secret file:', err);
-    console.log(await authorize(JSON.parse(content), provideStudentsCallback));
-  });
+const provideStudents = async () => {
+  try {
+    const content = fs.readFileSync('credentials.json');
+    return await authorize(JSON.parse(content), provideStudentsCallback);
+  } catch (e) {
+    return console.log('Error loading client secret file:', e);
+  }
 }
-provideStudents();
 
 module.exports = {
   provideStudents
