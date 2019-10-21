@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Soleil Solomon & Andre Pato",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.0.0",
