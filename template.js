@@ -8,11 +8,15 @@ const template = (user) => {
   <h4>HW Completion: <ul>${formattedSubmissions}</ul></h4>
 
   <h3>What does this mean?</h3>
-  1. 3 unexcused latenesses === 1 absence (or .33 absence). If you have more than 3 absences, you are disqualified from course completion and outcomes support.
-  2. If your overall HW completion is currently:
-   a) Above 83%, you’re in great standing! Keep up the great work!
-   b) Between 80-83%, you’re also in good standing and keep up the great work! However, do keep in mind, you’re sitting on the edge of dropping below 80% if you miss a couple of assignments in the remaining weeks.
-   c) Below 80%, keep up the good work but you need to catch up! As per GA requirements, below 80% for hw completion does not qualify you for both the completion certificate and post-course outcomes support from your career coach. Please reach out to your IAs and let’s get you caught up!
+  <p>3 unexcused latenesses === 1 absence (or .33 absence). If you have more than 3 absences, you are disqualified from course completion and outcomes support.</p>
+
+  <p>If your overall HW completion is currently:</p>
+
+  <p>a) Above 83%, you’re in great standing! Keep up the great work!</p>
+
+  <p>b) Between 80-83%, you’re also in good standing and keep up the great work! However, do keep in mind, you’re sitting on the edge of dropping below 80% if you miss a couple of assignments in the remaining weeks.</p>
+  
+  <p>c) Below 80%, keep up the good work but you need to catch up! As per GA requirements, below 80% for hw completion does not qualify you for both the completion certificate and post-course outcomes support from your career coach. Please reach out to your IAs and let’s get you caught up!</p>
   `
 }
 
