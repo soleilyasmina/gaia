@@ -1,7 +1,6 @@
 const fs = require('fs');
 const readline = require('readline');
 const { google } = require('googleapis');
-const nodemailer = require('nodemailer');
 
 require('dotenv').config();
 
@@ -32,43 +31,21 @@ const getNewToken = (oAuth2Client, callback) => {
         if (err) return console.error(err);
         console.log('Token stored to', TOKEN_PATH);
       });
-      callback(oAuth2Client);
+      return callback(oAuth2Client);
     });
   });
 };
 
+// to authorize and grab secret
 const authorize = async (credentials, callback) => {
   const { client_secret, client_id, redirect_uris } = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
   // check if a token exists
-  fs.readFile(TOKEN_PATH, (err, token) => {
+  fs.readFile(TOKEN_PATH, async (err, token) => {
     if (err) return getNewToken(oAuth2Client, callback);
     oAuth2Client.setCredentials(JSON.parse(token));
-    return callback(oAuth2Client);
-  });
-};
-
-const transport = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAILUSER,
-    pass: process.env.EMAILPASS,
-  },
-});
-
-const sendMailTo = (email, text) => {
-  transport.sendMail({
-    from: process.env.EMAILUSER,
-    to: email,
-    subject: 'Homework / Absence Status',
-    text,
-  }, (err, info) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(`Email sent: ${info.response}`);
-    }
+    console.log('within authorize', await callback(oAuth2Client));
   });
 };
 
@@ -87,6 +64,7 @@ const provideStudentsCallback = async (auth) => {
   const assignmentsData = await sheets.spreadsheets.values.get({
     spreadsheetId: process.env.SPREADSHEETID,
     range: 'Homework Completion!F5:BC5',
+    valueRenderOption: 'FORMULA'
   });
   const submissionsData = await sheets.spreadsheets.values.get({
     spreadsheetId: process.env.SPREADSHEETID,
@@ -104,8 +82,16 @@ const provideStudentsCallback = async (auth) => {
   const attendances = attendancesData.data.values;
   const enrollments = enrollmentData.data.values;
 
-  // stringify homework
-  const assignHomework = studentSubmissions => assignments.map((item, index) => ({ [item]: studentSubmissions[index] }));
+  // convert homework from formula to items
+  const assignHomework = studentSubmissions => assignments.map((item, index) => {
+    const [ link, name ] = item.replace('=HYPERLINK(','').replace(/[")]/g, '').split(',');
+    return { 
+      [name]: {
+        completion: studentSubmissions[index],
+        link
+      }
+    }
+  });
 
   // preparing the final output
   const assignedStudents = students.map((item, index) => ({
@@ -117,18 +103,16 @@ const provideStudentsCallback = async (auth) => {
     submissions: assignHomework(submissions[index]),
     index,
   }));
-
-  console.table(assignedStudents);
+  console.log('within cb', assignedStudents);
   return assignedStudents;
 };
 
 const provideStudents = () => {
-  fs.readFile('credentials.json', (err, content) => {
+  fs.readFile('credentials.json', async (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
-    return authorize(JSON.parse(content), provideStudentsCallback);
+    console.log(await authorize(JSON.parse(content), provideStudentsCallback));
   });
 }
-
 provideStudents();
 
 module.exports = {
