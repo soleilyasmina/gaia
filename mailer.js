@@ -19,7 +19,7 @@ const mailer = async (students) => {
       await students.forEach(async (student) => {
         await transporter.sendMail({
           from: process.env.EMAILUSER,
-          to: 'soleil.solomon@generalassemb.ly',
+          to: student.email,
           subject: 'Progress Report',
           html: template(student)
         });

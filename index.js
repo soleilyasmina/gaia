@@ -121,7 +121,8 @@ const provideStudents = async () => {
 }
 
 (async () => {
-  await mailer(await provideStudents());
+  const students = await provideStudents();
+  await mailer(students);
 })();
 
 module.exports = provideStudents;
