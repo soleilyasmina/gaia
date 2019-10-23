@@ -1,5 +1,8 @@
 const axios = require('axios');
+const fs = require('fs');
+const { google } = require('googleapis');
 
+const authorize = require('./auth');
 const provideStudents = require('./index');
 
 require('dotenv').config();
@@ -43,10 +46,21 @@ const parsePullRequestJSON = async (link) => {
   }
 };
 
-const ghost = async (students) => {
+const ghost = async (auth, columns) => {
+  const sheets = google.sheets({ version: 'v4', auth });
+  await sheets.spreadsheets.values.batchUpdate({
+    spreadsheetId: process.env.SPREADSHEETID,
+    resource: {
+      data: columns,
+      valueInputOption: 'USER_ENTERED',
+    },
+  });
+  console.log('Sheet updated!');
+};
+
+const createColumns = async (auth, students) => {
   const assignments = students[0].submissions.map((stu) => stu.link);
-  const columns = [];
-  await assignments.forEach(async (assignment, index) => {
+  const columns = await Promise.all(await assignments.map(async (assignment, index) => {
     try {
       if (assignment === undefined) return;
       const values = [];
@@ -70,21 +84,32 @@ const ghost = async (students) => {
         }
       });
       const column = toColumn(index + 6);
-      columns.push({
+      const value = {
         majorDimension: 'COLUMNS',
-        range: `${column}6:${column}${students.length + 6}`,
+        range: `Homework Completion!${column}6:${column}${students.length + 6}`,
         values: [values],
-      });
+      };
+      return value;
     } catch (e) {
       console.error(e);
     }
-  });
-  // implement post here
+  }));
+  const definedColumns = columns.filter((col) => col !== undefined);
+  return ghost(auth, definedColumns);
+};
+
+const updateStudents = async (students) => {
+  try {
+    const content = fs.readFileSync('credentials.json');
+    return await authorize(JSON.parse(content), createColumns, students);
+  } catch (e) {
+    return console.error('Error loading client secret file:', e);
+  }
 };
 
 (async () => {
   const students = await provideStudents();
-  await ghost(students);
+  await updateStudents(students);
 })();
 
 module.exports = ghost;
