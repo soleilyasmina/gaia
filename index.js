@@ -9,13 +9,21 @@ const provideStudentsCallback = async (auth) => {
   // it's time for us to grab some data
   const sheets = google.sheets({ version: 'v4', auth });
   // grab the individual students names
+
+  const studentIdData = await sheets.spreadsheets.values.get({
+    spreadsheetId: process.env.SPREADSHEETID,
+    range: 'Course Roster and Progress!B5:B50',
+  });
+
+  const totalStudents = studentIdData.data.values.filter((val) => val[0] !== '').length;
+
   const studentsData = await sheets.spreadsheets.values.get({
     spreadsheetId: process.env.SPREADSHEETID,
-    range: 'Homework Completion!B6:F20',
+    range: `Homework Completion!B6:F${6 + totalStudents - 1}`,
   });
   const enrollmentData = await sheets.spreadsheets.values.get({
     spreadsheetId: process.env.SPREADSHEETID,
-    range: 'Course Roster and Progress!F5:F19',
+    range: `Course Roster and Progress!F5:F${5 + totalStudents - 1}`,
   });
   const assignmentsData = await sheets.spreadsheets.values.get({
     spreadsheetId: process.env.SPREADSHEETID,
@@ -24,11 +32,11 @@ const provideStudentsCallback = async (auth) => {
   });
   const submissionsData = await sheets.spreadsheets.values.get({
     spreadsheetId: process.env.SPREADSHEETID,
-    range: 'Homework Completion!G6:BD20',
+    range: `Homework Completion!G6:BD${6 + totalStudents - 1}`,
   });
   const attendancesData = await sheets.spreadsheets.values.get({
     spreadsheetId: process.env.SPREADSHEETID,
-    range: 'Attendance!E11:E25',
+    range: `Attendance!E11:E${11 + totalStudents - 1}`,
   });
 
   const students = studentsData.data.values;
@@ -63,7 +71,7 @@ const provideStudentsCallback = async (auth) => {
     submissions: assignHomework(submissions[index]),
     index,
   }));
-  return assignedStudents;
+  return [auth, assignedStudents];
 };
 
 const provideStudents = async () => {
@@ -76,7 +84,8 @@ const provideStudents = async () => {
 };
 
 (async () => {
-  await provideStudents();
+  const [auth, students] = await provideStudents();
+  await ghost(auth, students);
 })();
 
 module.exports = provideStudents;

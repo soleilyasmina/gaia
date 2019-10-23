@@ -46,19 +46,7 @@ const parsePullRequestJSON = async (link) => {
   }
 };
 
-const ghost = async (auth, columns) => {
-  const sheets = google.sheets({ version: 'v4', auth });
-  await sheets.spreadsheets.values.batchUpdate({
-    spreadsheetId: process.env.SPREADSHEETID,
-    resource: {
-      data: columns,
-      valueInputOption: 'USER_ENTERED',
-    },
-  });
-  console.log('Sheet updated!');
-};
-
-const createColumns = async (auth, students) => {
+const createColumns = async (students) => {
   const assignments = students[0].submissions.map((stu) => stu.link);
   const columns = await Promise.all(await assignments.map(async (assignment, index) => {
     try {
@@ -95,21 +83,25 @@ const createColumns = async (auth, students) => {
     }
   }));
   const definedColumns = columns.filter((col) => col !== undefined);
-  return ghost(auth, definedColumns);
+  return definedColumns;
 };
 
-const updateStudents = async (students) => {
-  try {
-    const content = fs.readFileSync('credentials.json');
-    return await authorize(JSON.parse(content), createColumns, students);
-  } catch (e) {
-    return console.error('Error loading client secret file:', e);
-  }
+const ghost = async (auth, students) => {
+  const columns = await createColumns(students);
+  const sheets = google.sheets({ version: 'v4', auth });
+  await sheets.spreadsheets.values.batchUpdate({
+    spreadsheetId: process.env.SPREADSHEETID,
+    resource: {
+      data: columns,
+      valueInputOption: 'USER_ENTERED',
+    },
+  });
+  console.log('Sheet updated!');
 };
 
 (async () => {
-  const students = await provideStudents();
-  await updateStudents(students);
+  const [auth, students] = await provideStudents();
+  await createColumns(auth, students);
 })();
 
 module.exports = ghost;

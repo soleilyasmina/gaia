@@ -25,11 +25,11 @@ const getNewToken = (oAuth2Client, callback, ...params) => {
     oAuth2Client.getToken(code, (err, token) => {
       if (err) return console.error('Error while trying to retrieve access token', err);
       oAuth2Client.setCredentials(token);
-      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) return console.error(err);
+      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err1) => {
+        if (err1) return console.error(err1);
         console.log('Token stored to', TOKEN_PATH);
       });
-      return callback(oAuth2Client, ...params);
+      return callback(oAuth2Client);
     });
   });
 };
@@ -43,9 +43,9 @@ const authorize = async (credentials, callback, ...params) => {
   try {
     const token = fs.readFileSync(TOKEN_PATH)
     oAuth2Client.setCredentials(JSON.parse(token));
-    return await callback(oAuth2Client, ...params);
+    return await callback(oAuth2Client);
   } catch (e) {
-    return getNewToken(oAuth2Client, callback, ...params);
+    return getNewToken(oAuth2Client, callback);    
   }
 };
 
