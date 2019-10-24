@@ -71,7 +71,7 @@ const createColumns = async (students) => {
             break;
         }
       });
-      const column = toColumn(index + 6);
+      const column = toColumn(index + 7);
       const value = {
         majorDimension: 'COLUMNS',
         range: `Homework Completion!${column}6:${column}${students.length + 6}`,

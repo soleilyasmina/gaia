@@ -16,7 +16,8 @@ const mailer = async (students) => {
       }
     });
     if (students) {
-      await students.forEach(async (student) => {
+      const enrolledStudents = students.filter((stu) => stu.enrollment !== 'withdrawn');
+      await enrolledStudents.forEach(async (student) => {
         await transporter.sendMail({
           from: process.env.EMAILUSER,
           to: student.email,
@@ -25,7 +26,7 @@ const mailer = async (students) => {
         });
         console.log(`Sending email to ${student.name} at ${student.email}.`);
         sent++;
-        if (sent === students.length) {
+        if (sent === enrolledStudents.length) {
           transporter.close();
           console.log('All Messages Sent');
         }
