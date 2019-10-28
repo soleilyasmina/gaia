@@ -1,9 +1,6 @@
+/* eslint-disable no-console */
 const axios = require('axios');
-const fs = require('fs');
 const { google } = require('googleapis');
-
-const authorize = require('./auth');
-const provideStudents = require('./index');
 
 require('dotenv').config();
 
@@ -98,10 +95,5 @@ const ghost = async (auth, students) => {
   });
   console.log('Sheet updated!');
 };
-
-(async () => {
-  const [auth, students] = await provideStudents();
-  await createColumns(auth, students);
-})();
 
 module.exports = ghost;

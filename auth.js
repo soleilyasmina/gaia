@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const fs = require('fs');
 const readline = require('readline');
 const { google } = require('googleapis');
@@ -9,7 +10,7 @@ const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const TOKEN_PATH = 'token.json';
 
 // acquiring a new token
-const getNewToken = (oAuth2Client, callback, ...params) => {
+const getNewToken = (oAuth2Client, callback) => {
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: SCOPES,
@@ -27,7 +28,7 @@ const getNewToken = (oAuth2Client, callback, ...params) => {
       oAuth2Client.setCredentials(token);
       fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err1) => {
         if (err1) return console.error(err1);
-        console.log('Token stored to', TOKEN_PATH);
+        return console.log('Token stored to', TOKEN_PATH);
       });
       return callback(oAuth2Client);
     });
@@ -35,17 +36,19 @@ const getNewToken = (oAuth2Client, callback, ...params) => {
 };
 
 // to authorize and grab secret
-const authorize = async (credentials, callback, ...params) => {
-  const { client_secret, client_id, redirect_uris } = credentials.installed;
-  const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
+const authorize = async (credentials, callback) => {
+  const {
+    client_id: clientId, client_secret: clientSecret, redirect_uris: redirectURIs,
+  } = credentials.installed;
+  const oAuth2Client = new google.auth.OAuth2(clientId, clientSecret, redirectURIs[0]);
 
   // check if a token exists
   try {
-    const token = fs.readFileSync(TOKEN_PATH)
+    const token = fs.readFileSync(TOKEN_PATH);
     oAuth2Client.setCredentials(JSON.parse(token));
     return await callback(oAuth2Client);
   } catch (e) {
-    return getNewToken(oAuth2Client, callback);    
+    return getNewToken(oAuth2Client, callback);
   }
 };
 

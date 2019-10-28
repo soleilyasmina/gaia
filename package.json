@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "ghost": "node . --ghost",
+    "mailedit": "node . --mailedit",
+    "all": "node . --ghost --mailedit",
+    "help": "echo Documentation coming soon!"
   },
   "keywords": [],
   "author": "Soleil Solomon & Andre Pato",

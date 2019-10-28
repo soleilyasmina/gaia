@@ -25,7 +25,7 @@ const mailer = async (students) => {
           html: template(student)
         });
         console.log(`Sending email to ${student.name} at ${student.email}.`);
-        sent++;
+        sent += 1;
         if (sent === enrolledStudents.length) {
           transporter.close();
           console.log('All Messages Sent');
