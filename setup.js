@@ -21,7 +21,7 @@ const setup = () => {
       noEmailPass.code = 'NOEMAILPASS';
       throw noEmailPass;
     } else {
-      console.log('You\'re all ready to go');
+      console.log('You\'re all ready to go!');
     }
   } catch (e) {
     switch (e.code) {
@@ -34,7 +34,7 @@ const setup = () => {
         console.error('Save it as SPREADSHEETID in this directory in your ".env" file.');
         break;
       case 'NOEMAILUSER':
-        console.error('No user detected for Mailed It!');
+        console.error('No email address detected for Mailed It!');
         console.error('Save it as EMAILUSER in this directory in your ".env" file.');
         break;
       case 'NOEMAILPASS':
