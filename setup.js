@@ -7,15 +7,21 @@ const setup = () => {
   try {
     fs.readFileSync('credentials.json');
     console.log('Credentials found!');
-    const { EMAILUSER, SPREADSHEETID } = process.env;
+    const { EMAILPASS, EMAILUSER, SPREADSHEETID } = process.env;
     if (!SPREADSHEETID) {
       const noSpreadsheet = new ReferenceError();
       noSpreadsheet.code = 'NOID';
       throw noSpreadsheet;
     } else if (!EMAILUSER) {
-
+      const noEmailUser = new ReferenceError();
+      noEmailUser.code = 'NOEMAILUSER';
+      throw noEmailUser;
+    } else if (!EMAILPASS) {
+      const noEmailPass = new ReferenceError();
+      noEmailPass.code = 'NOEMAILPASS';
+      throw noEmailPass;
     } else {
-
+      console.log('You\'re all ready to go');
     }
   } catch (e) {
     switch (e.code) {
@@ -25,6 +31,14 @@ const setup = () => {
         break;
       case 'NOID':
         console.error('No Google Sheet id detected.');
+        console.error('Save it as SPREADSHEETID in this directory in your ".env" file.');
+        break;
+      case 'NOEMAILUSER':
+        console.error('No user detected for Mailed It!');
+        console.error('Save it as EMAILUSER in this directory in your ".env" file.');
+        break;
+      case 'NOEMAILPASS':
+        console.error('No app password detected. Please visit https://support.google.com/accounts/answer/185833?hl=en to create an app password.');
         console.error('Save them in this directory in your ".env" file.');
         break;
       default:
