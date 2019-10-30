@@ -7,7 +7,9 @@ const setup = () => {
   try {
     fs.readFileSync('credentials.json');
     console.log('Credentials found!');
-    const { EMAILPASS, EMAILUSER, SPREADSHEETID } = process.env;
+    const {
+      EMAILPASS, EMAILUSER, SPREADSHEETID, TOKEN,
+    } = process.env;
     if (!SPREADSHEETID) {
       const noSpreadsheet = new ReferenceError();
       noSpreadsheet.code = 'NOID';
@@ -20,6 +22,10 @@ const setup = () => {
       const noEmailPass = new ReferenceError();
       noEmailPass.code = 'NOEMAILPASS';
       throw noEmailPass;
+    } else if (!TOKEN) {
+      const noToken = new ReferenceError();
+      noToken.code = 'NOTOKEN';
+      throw noToken;
     } else {
       console.log('You\'re all ready to go!');
     }
@@ -39,7 +45,11 @@ const setup = () => {
         break;
       case 'NOEMAILPASS':
         console.error('No app password detected. Please visit https://support.google.com/accounts/answer/185833?hl=en to create an app password.');
-        console.error('Save them in this directory in your ".env" file.');
+        console.error('Save it as EMAILPASS in this directory in your ".env" file.');
+        break;
+      case 'NOTOKEN':
+        console.error('No personal access token detected. Please copy your token from Git Over Here.');
+        console.error('Save it as TOKEN in this directory in your ".env" file.');
         break;
       default:
         console.error(e);
