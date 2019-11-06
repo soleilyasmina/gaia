@@ -1,13 +1,15 @@
 {
   "name": "homework-tracker",
   "version": "1.0.0",
-  "description": "",
+  "description": "Two tools for General Assembly IAs, GHOST and Mailed It!",
   "main": "index.js",
   "scripts": {
+    "auth": "node . --setup",
     "ghost": "node . --ghost",
     "mailedit": "node . --mailedit",
     "all": "node . --ghost --mailedit",
-    "help": "echo Documentation coming soon!"
+    "help": "open https://git.generalassemb.ly/soleilyasmina/homework-tracker",
+    "setup": "node setup.js"
   },
   "keywords": [],
   "author": "Soleil Solomon & Andre Pato",

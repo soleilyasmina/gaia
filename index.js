@@ -5,6 +5,9 @@ const mailer = require('./mailer');
 
 const main = async () => {
   const args = process.argv;
+  if (args.includes('-s') || args.includes('--setup')) {
+    await provideStudents();
+  }
   if (args.includes('-g') || args.includes('--ghost')) {
     const [auth, students] = await provideStudents();
     await ghost(auth, students);

@@ -48,6 +48,7 @@ const authorize = async (credentials, callback) => {
     oAuth2Client.setCredentials(JSON.parse(token));
     return await callback(oAuth2Client);
   } catch (e) {
+    console.log(e);
     return getNewToken(oAuth2Client, callback);
   }
 };
