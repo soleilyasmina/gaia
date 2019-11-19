@@ -14,7 +14,7 @@ These programs access your course tracker from Google Sheets to do a number of t
 
 Probably! There are a few quick conditions that need to be met before setting up.
 
-1. All repositories in the Homework Tracker must be linked if you want them to be graded. Provide the same link you would give someone if they were to clone down the repo themselves (without the .git extension). By the same extension, if you don't want a certain homework in the sheet to change, don't link it.
+1. All repositories in the Homework Tracker must be linked if you want them to be graded. Provide the same link you would give someone if they were to clone down the repo themselves (without the .git extension, e.g. https://git.generalassemb.ly/sei-nyc-pizza/making-friends). By the same extension, if you don't want a certain homework in the sheet to change, don't link it.
 1. All students must have their GitHub enterprise usernames and e-mails in your course tracker.
 1. You must set up Git Over Here beforehand, as this suite uses the GitHub personal access token for the GitHub API.
 
