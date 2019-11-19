@@ -25,8 +25,8 @@ const toColumn = (num) => {
 
 const parsePullRequestJSON = async (link) => {
   if (link === undefined) return [];
-  const repository = link.replace(`${BASE_URL}/`, '');
-  const convertedLink = `${BASE_URL}/api/v3/repos/${repository}/pulls?state=all`;
+  const [organization, repository] = link.replace(`${BASE_URL}/`, '').split('/');
+  const convertedLink = `${BASE_URL}/api/v3/repos/${organization}/${repository}/pulls?state=all`;
   try {
     const resp = await axios.get(convertedLink, {
       headers: {
