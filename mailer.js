@@ -16,7 +16,11 @@ const mailer = async (students) => {
       },
     });
     if (students) {
-      const enrolledStudents = students.filter((stu) => stu.enrollment !== 'withdrawn');
+      const enrolledStudents = students.filter((stu) => {
+        try {
+          return stu.enrollment !== 'withdrawn';
+        } catch (error) {}
+      });
       await enrolledStudents.forEach(async (student) => {
         await transporter.sendMail({
           from: process.env.EMAILUSER,
