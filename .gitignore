@@ -1,7 +1,9 @@
 # Credentials
 credentials.json
 token.json
+auth.txt
 .env
 
 # Dependencies
 node_modules/
+
