@@ -34,7 +34,10 @@ const parsePullRequestJSON = async (link) => {
       },
     });
     const pullRequests = resp.data.map((req) => {
-      const { state, user: { login } } = req;
+      const {
+        state,
+        user: { login },
+      } = req;
       return { state, login };
     });
     return pullRequests;
@@ -45,40 +48,43 @@ const parsePullRequestJSON = async (link) => {
 
 const createColumns = async (students) => {
   const assignments = students[0].submissions.map((stu) => stu.link);
-  const columns = await Promise.all(await assignments.map(async (assignment, index) => {
-    try {
-      if (assignment === undefined) return;
-      const values = [];
-      const pullRequests = await parsePullRequestJSON(assignment);
-      students.forEach((stu) => {
-        const { username, enrollment } = stu;
-        const completion = pullRequests.filter((pr) => pr.login === username);
-        switch (true) {
-          case enrollment === 'withdrawn':
-            values.push('');
-            break;
-          case completion.length === 0:
-            values.push('Missing');
-            break;
-          case completion[0].state === 'open':
-            values.push('Incomplete');
-            break;
-          default:
-            values.push('Complete');
-            break;
-        }
-      });
-      const column = toColumn(index + 7);
-      const value = {
-        majorDimension: 'COLUMNS',
-        range: `Homework Completion!${column}6:${column}${students.length + 6}`,
-        values: [values],
-      };
-      return value;
-    } catch (e) {
-      console.error(e);
-    }
-  }));
+  const columns = await Promise.all(
+    await assignments.map(async (assignment, index) => {
+      try {
+        if (assignment === undefined) return;
+        const values = [];
+        const pullRequests = await parsePullRequestJSON(assignment);
+        students.forEach((stu) => {
+          const { username, enrollment } = stu;
+          const completion = pullRequests.filter((pr) => pr.login === username);
+          switch (true) {
+            case enrollment === 'withdrawn':
+              values.push('');
+              break;
+            case completion.length === 0:
+              values.push('Missing');
+              break;
+            case completion[0].state === 'open':
+              values.push('Incomplete');
+              break;
+            default:
+              values.push('Complete');
+              break;
+          }
+        });
+        const column = toColumn(index + 7);
+        const value = {
+          majorDimension: 'COLUMNS',
+          range: `Homework Completion!${column}6:${column}${students.length
+            + 6}`,
+          values: [values],
+        };
+        return value;
+      } catch (e) {
+        // console.error(e);
+      }
+    }),
+  );
   const definedColumns = columns.filter((col) => col !== undefined);
   return definedColumns;
 };

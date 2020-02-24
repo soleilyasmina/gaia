@@ -13,7 +13,8 @@ const provideStudentsCallback = async (auth) => {
     range: 'Course Roster and Progress!B5:B50',
   });
 
-  const totalStudents = studentIdData.data.values.filter((val) => val[0] !== '').length;
+  const totalStudents = studentIdData.data.values.filter((val) => val[0] !== '')
+    .length;
 
   const studentsData = await sheets.spreadsheets.values.get({
     spreadsheetId: process.env.SPREADSHEETID,
@@ -39,14 +40,19 @@ const provideStudentsCallback = async (auth) => {
 
   const students = studentsData.data.values;
   // remove any not filled in homework
-  const assignments = assignmentsData.data.values[0].filter((item) => !item.match(/[HW] [\d]/));
+  const assignments = assignmentsData.data.values[0].filter(
+    (item) => !item.match(/[HW] [\d]/),
+  );
   const submissions = submissionsData.data.values;
   const attendances = attendancesData.data.values;
   const enrollments = enrollmentData.data.values;
 
   // convert homework from formula to items
   const assignHomework = (studentSubmissions) => assignments.map((item, index) => {
-    let [link, name] = item.replace('=HYPERLINK(', '').replace(/[")]/g, '').split(',');
+    let [link, name] = item
+      .replace('=HYPERLINK(', '')
+      .replace(/[")]/g, '')
+      .split(',');
     if (!name) {
       name = link;
       link = undefined;
@@ -59,16 +65,22 @@ const provideStudentsCallback = async (auth) => {
   });
 
   // preparing the final output
-  const assignedStudents = students.map((item, index) => ({
-    name: `${item[0]} ${item[1]}`,
-    username: item[2],
-    email: item[3],
-    percentage: item[4],
-    absences: attendances[index][0],
-    enrollment: enrollments[index][0],
-    submissions: assignHomework(submissions[index]),
-    index,
-  }));
+  const assignedStudents = students.map((item, index) => {
+    try {
+      return {
+        name: `${item[0]} ${item[1]}`,
+        username: item[2],
+        email: item[3],
+        percentage: item[4],
+        absences: attendances[index][0],
+        enrollment: enrollments[index][0],
+        submissions: assignHomework(submissions[index]),
+        index,
+      };
+    } catch (error) {
+      // console.log(error)
+    }
+  });
   return [auth, assignedStudents];
 };
 
