@@ -6,4 +6,4 @@ auth.txt
 
 # Dependencies
 node_modules/
-
+yarn.lock
