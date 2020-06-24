@@ -22,7 +22,7 @@ const setup = () => {
     TOKEN: TOKEN || rl.question('\nPlease copy in your personal access token (with repo permissions) from GitHub Enterprise. You can find it here: https://git.generalassemb.ly/settings/tokens/new\n'),
   };
   const envStr = Object.entries(env).reduce((acc, [key, value]) => acc.concat(`${key}=${value}\n`), '');
-  fs.writeFileSync('.env.temp', envStr);
+  fs.writeFileSync('.env', envStr);
 };
 
 setup();

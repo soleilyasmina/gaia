@@ -1,7 +1,7 @@
 {
   "name": "homework-tracker",
   "version": "1.0.0",
-  "description": "Two tools for General Assembly IAs, GHOST and Mailed It!",
+  "description": "A series of tools for GA IAs and TAs.",
   "main": "index.js",
   "scripts": {
     "all": "node . --ghost --mailedit",
@@ -12,7 +12,7 @@
     "mailedit": "node . --mailedit",
     "mailedit-test": "node . --mailedit --test",
     "help": "node manual.js",
-    "setup": "node setup.js",
+    "setup": "node setup.js && cd git-over-here && brew bundle install && cd ..",
     "update": "node update.js"
   },
   "keywords": [],
