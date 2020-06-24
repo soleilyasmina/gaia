@@ -14,7 +14,8 @@ const main = async () => {
     update();
   }
   if (args.includes('-s') || args.includes('--setup')) {
-    await provideStudents();
+    const [auth, students] = await provideStudents();
+    console.table(students);
   }
   if (args.includes('-g') || args.includes('--ghost')) {
     const [auth, students] = await provideStudents();
