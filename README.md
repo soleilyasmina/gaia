@@ -1,14 +1,12 @@
-# GHOST && Mailed It!
-
-![https://media.giphy.com/media/l0HU2sYgCZh3HiKnS/giphy.gif](https://media.giphy.com/media/l0HU2sYgCZh3HiKnS/giphy.gif)
+# GAIA: New and Improved!
 
 ## What are these things in large font?
 
-__GHOST__ and __Mailed It!__ are two programs for General Assembly SEI IAs, to update the course tracker with homework status, as well as to send out progress reports.
+__GAIA__ is a series for General Assembly SEI IAs and TAs, to update the course tracker with homework status, to send out progress reports, and to automate cloning repos for grading.
 
 > But what do they _really_ do?
 
-These programs access your course tracker from Google Sheets to do a number of things. Inside the `auth.js` file, we use Google OAuth to get access to your course tracker from your Google account. Afterwards, in the `students.js` file, your students' info is pulled from several sheets in your course tracker, and given to the two other scripts in this folder, `ghost` and `mailer`. 
+These programs access your course tracker from Google Sheets to do a number of things. Inside the `auth.js` file, we use Google OAuth to get access to your course tracker from your Google account. Afterwards, in the `students.js` file, your students' info is pulled from several sheets in your course tracker, and given to the two other scripts in this folder, `ghost` and `mailer`. More information regarding Git-Over-Here is within its manual.
 
 ## So can I get started?
 
@@ -24,36 +22,12 @@ Great question! Here are some set-up steps:
 
 #### Get the Goods
 
-Fork and clone this repository onto your local machine. Once you have this repo cloned down, run `npm i`. From then on, you can run `npm run setup` as an additional reference for setting this application up. If you've followed the steps in this tutorial properly, executing that script should inform you that `you're all ready to go`.
+Fork and clone this repository onto your local machine. Once you have this repo cloned down, run `npm i`. From then on, you can run `npm run setup` as an additional reference for setting this application up.
 
-#### Working with the Google Sheets API v4
+#### Read the manual!
 
-![Node.js quickstart](https://media.git.generalassemb.ly/user/17021/files/0a9ee280-002b-11ea-9b43-acfd15427556)
+To get more information on the homework tracker, run `npm run help` to get more information. For Git-Over-Here, consult the manual, or `cd` into the folder and run `sh main.sh --help`.
 
-
-To get access to your Google Sheets, you need to enable the Google Sheets API on your General Assembly e-mail account. [If you visit the Node.js quickstart tutorial for the Google Sheets API](https://developers.google.com/sheets/api/quickstart/nodejs?authuser=3), you can enable it via their Step 1. After enabling this, you'll be able to download the credentials as a file called `credentials.json`. Save this file into this directory, and you'll be able to access your spreadsheets.
-
-#### App Passwords && 2-Factor Authentication for Mailed It!
-
-__If haven't set up 2-Factor Authentication for your General Assembly e-mail, do so now.__
-
-We need to create a special app password that __Mailed It!__ can use to email your students. Go to `https://myaccount.google.com/` on your General Assembly e-mail, and go to the Security panel. Scroll down to the `Signing in to Google` card, and click on App passwords. Generate an app password and save it into your `.env` file as `EMAILPASS`.
-
-#### Other .env Variables
-
-Obtain your course tracker spreadsheet ID, and save it to your `.env` file as `SPREADSHEETID`.
-
-Obtain your personal access token from Git Over Here, and save it your `.env` file as `TOKEN`.
-
-Save your General Assembly e-mail address in your `.env` file as `EMAILUSER`.
-
-#### token.json
-
-In this folder, run `npm run auth`. This will use OAuth to sign in to Google Sheets under your General Assembly e-mail. Follow the link that it provides, and copy the code back into the terminal. This will create your token for your Google account.
-
-## I'm done setting up. Now what?
-
-Now that you have your resources set up, you can run `npm run ghost` to update your homework tracker, and `npm run mailedit` to update your students on their progress. It is recommended to run __GHOST__ before __Mailed It!__ for the most updated homework results. If you'd like to run both, you can use `npm run all`. 
 
 ## Troubleshooting
 
