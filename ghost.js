@@ -1,15 +1,15 @@
 /* eslint-disable no-console */
-const axios = require("axios");
-const { google } = require("googleapis");
+const axios = require('axios');
+const { google } = require('googleapis');
 
-require("dotenv").config();
+require('dotenv').config();
 
-const BASE_URL = "https://git.generalassemb.ly";
+const BASE_URL = 'https://git.generalassemb.ly';
 
 const toColumn = num => {
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   let counter = num;
-  let column = "";
+  let column = '';
   let step = 0;
   while (counter >= 1) {
     if (counter < 27) {
@@ -26,86 +26,91 @@ const toColumn = num => {
 const parsePullRequestJSON = async link => {
   if (link === undefined) return [];
   const [organization, repository] = link
-    .replace(`${BASE_URL}/`, "")
-    .split("/");
+    .replace(`${BASE_URL}/`, '')
+    .split('/');
   const convertedLink = `${BASE_URL}/api/v3/repos/${organization}/${repository}/pulls?state=all`;
   try {
     const resp = await axios.get(convertedLink, {
       headers: {
-        Authorization: `token ${process.env.TOKEN}`
-      }
+        Authorization: `token ${process.env.TOKEN}`,
+      },
     });
-    const pullRequests = resp.data.map(req => {
+    const pullRequests = resp.data.map((req) => {
       const {
         state,
-        user: { login }
+        user: { login },
       } = req;
       return { state, login };
     });
     return pullRequests;
   } catch (e) {
-    console.error("Could not get pull requests.", e);
+    console.error('Could not get pull requests.', e);
   }
 };
 
-const createColumns = async students => {
-  const assignments = students[0].submissions.map(stu => stu.link);
+const createColumns = async (students) => {
+  const assignments = students[0].submissions.map((stu) => stu.link);
   const columns = await Promise.all(
     await assignments.map(async (assignment, index) => {
       try {
         if (assignment === undefined) return;
         const values = [];
         const pullRequests = await parsePullRequestJSON(assignment);
-        students.forEach(stu => {
+        students.forEach((stu) => {
           if (!stu) {
-            values.push("");
+            values.push('');
           } else {
             const { username, enrollment } = stu;
-            const completion = pullRequests.filter(pr => pr.login === username);
+            const completion = pullRequests.filter((pr) => pr.login === username);
             switch (true) {
-              case enrollment === "withdrawn":
-                values.push("");
+              case enrollment === 'withdrawn':
+                values.push('');
                 break;
               case completion.length === 0:
-                values.push("Missing");
+                values.push('Missing');
                 break;
-              case completion[0].state === "open":
-                values.push("Incomplete");
+              case completion[0].state === 'open':
+                values.push('Incomplete');
                 break;
               default:
-                values.push("Complete");
+                values.push('Complete');
                 break;
             }
           }
         });
         const column = toColumn(index + 7);
         const value = {
-          majorDimension: "COLUMNS",
-          range: `Homework Completion!${column}6:${column}${students.length +
-            6}`,
-          values: [values]
+          majorDimension: 'COLUMNS',
+          range: `Homework Completion!${column}6:${column}${students.length + 6}`,
+          values: [values],
         };
         return value;
       } catch (e) {
         console.error(e);
       }
-    })
+    }),
   );
   const definedColumns = columns.filter(col => col !== undefined);
   return definedColumns;
 };
 
-const ghost = async (auth, students) => {
+const ghost = async (auth, students, test) => {
   const columns = await createColumns(students);
-  const sheets = google.sheets({ version: "v4", auth });
-  await sheets.spreadsheets.values.batchUpdate({
-    spreadsheetId: process.env.SPREADSHEETID,
-    resource: {
-      data: columns,
-      valueInputOption: "USER_ENTERED"
-    }
-  });
-  console.log("Sheet updated!");
+  const sheets = google.sheets({ version: 'v4', auth });
+  if (!test) {
+    await sheets.spreadsheets.values.batchUpdate({
+      spreadsheetId: process.env.SPREADSHEETID,
+      resource: {
+        data: columns,
+        valueInputOption: 'USER_ENTERED',
+      },
+    });
+    console.log('Sheet updated!');
+  } else {
+    console.table(columns);
+    console.log('Here are the results of your table.');
+  }
+  console.log('GHOST is complete!');
 };
 
 module.exports = ghost;

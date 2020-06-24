@@ -4,18 +4,23 @@
   "description": "Two tools for General Assembly IAs, GHOST and Mailed It!",
   "main": "index.js",
   "scripts": {
-    "auth": "node . --setup",
-    "ghost": "node . --ghost",
-    "mailedit": "node . --mailedit",
     "all": "node . --ghost --mailedit",
-    "help": "open https://git.generalassemb.ly/soleilyasmina/homework-tracker",
-    "setup": "node setup.js"
+    "all-test": "node . --ghost --mailedit --test",
+    "auth-test": "node . --setup",
+    "ghost": "node . --ghost",
+    "ghost-test": "node . --ghost --test",
+    "mailedit": "node . --mailedit",
+    "mailedit-test": "node . --mailedit --test",
+    "help": "node manual.js",
+    "setup": "node setup.js",
+    "update": "node update.js"
   },
   "keywords": [],
   "author": "Soleil Solomon, Andre Pato and Jordan Cruz-Correa",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.0",
+    "chalk": "^4.1.0",
     "dotenv": "^8.0.0",
     "fs": "0.0.1-security",
     "googleapis": "^39.2.0",

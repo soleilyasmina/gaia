@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 
 const template = require('./template');
 
-const mailer = async (students) => {
+const mailer = async (students, test) => {
   try {
     let sent = 0;
     const transporter = nodemailer.createTransport({
@@ -21,24 +21,34 @@ const mailer = async (students) => {
           return stu.enrollment !== 'withdrawn';
         } catch (error) {}
       });
-      await enrolledStudents.forEach(async (student) => {
+      if (test) {
         await transporter.sendMail({
           from: process.env.EMAILUSER,
-          to: student.email,
-          subject: 'Progress Report',
-          html: template(student),
+          to: process.env.EMAILUSER,
+          subject: 'Test Progress Report',
+          html: template(students[0]),
         });
-        console.log(`Sending email to ${student.name} at ${student.email}.`);
-        sent += 1;
-        if (sent === enrolledStudents.length) {
-          transporter.close();
-          console.log('All Messages Sent');
-        }
-      });
+      } else {
+        await enrolledStudents.forEach(async (student) => {
+          await transporter.sendMail({
+            from: process.env.EMAILUSER,
+            to: student.email,
+            subject: 'Progress Report',
+            html: template(student),
+          });
+          console.log(`Sending email to ${student.name} at ${student.email}.`);
+          sent += 1;
+          if (sent === enrolledStudents.length) {
+            transporter.close();
+            console.log('All Messages Sent');
+          }
+        });
+      }
     }
   } catch (error) {
     console.log(error);
   }
+  console.log('Mailer is complete!');
 };
 
 module.exports = mailer;
