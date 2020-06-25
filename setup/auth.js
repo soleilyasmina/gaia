@@ -9,7 +9,7 @@ require('dotenv').config();
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 
 // where the token is saved
-const TOKEN_PATH = 'token.json';
+const TOKEN_PATH = './setup/token.json';
 
 // acquiring a new token
 const getNewToken = (oAuth2Client, callback) => {
@@ -18,7 +18,6 @@ const getNewToken = (oAuth2Client, callback) => {
     scope: SCOPES,
   });
   console.log('Authorize this app by visiting this url:', authUrl);
-  fs.writeFileSync('auth.txt', authUrl);
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -58,9 +57,10 @@ const authorize = async (credentials, callback) => {
     return await callback(oAuth2Client);
   } catch (e) {
     if (e.code === 'ENOENT') {
+      console.log('No token found! Attempting to get new token.');
       return getNewToken(oAuth2Client, callback);
     }
-    console.log(e);
+    // console.log(e.code);
   }
 };
 

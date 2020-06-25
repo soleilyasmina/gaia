@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const update = () => {
   try {
-    fs.readFileSync('credentials.json');
+    fs.readFileSync('./setup/credentials.json');
     console.log('Credentials found!')
   } catch (e) {
     console.log('No credentials found. Open this link with your General Assembly e-mail, and enable the Google Sheets API: https://developers.google.com/sheets/api/quickstart/nodejs');

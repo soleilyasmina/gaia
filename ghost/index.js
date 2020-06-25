@@ -107,8 +107,7 @@ const ghost = async (auth, students, test) => {
     });
     console.log('Sheet updated!');
   } else {
-    console.table(columns);
-    console.log('Here are the results of your table.');
+    console.log(`${columns.length} columns eligible for update!`);
   }
   console.log('GHOST is complete!');
 };

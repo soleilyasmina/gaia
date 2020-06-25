@@ -3,6 +3,8 @@ const nodemailer = require('nodemailer');
 
 const template = require('./template');
 
+require('dotenv').config();
+
 const mailer = async (students, test) => {
   try {
     let sent = 0;
@@ -26,8 +28,9 @@ const mailer = async (students, test) => {
           from: process.env.EMAILUSER,
           to: process.env.EMAILUSER,
           subject: 'Test Progress Report',
-          html: template(students[0]),
+          html: template(enrolledStudents[0]),
         });
+        console.log(`Sending test email for ${enrolledStudents[0].name} to ${process.env.EMAILUSER}.`)
       } else {
         await enrolledStudents.forEach(async (student) => {
           await transporter.sendMail({

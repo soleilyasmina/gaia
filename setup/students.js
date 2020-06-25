@@ -87,7 +87,7 @@ const provideStudentsCallback = async (auth) => {
 
 const provideStudents = async () => {
   try {
-    const content = fs.readFileSync('credentials.json');
+    const content = fs.readFileSync('./setup/credentials.json');
     return await authorize(JSON.parse(content), provideStudentsCallback);
   } catch (e) {
     return console.log('Error loading client secret file:', e);
