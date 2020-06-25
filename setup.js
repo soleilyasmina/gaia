@@ -9,7 +9,7 @@ const setup = () => {
     console.log('Credentials found!')
   } catch (e) {
     console.log('No credentials found. Open this link with your General Assembly e-mail, and enable the Google Sheets API: https://developers.google.com/sheets/api/quickstart/nodejs');
-    console.log('After doing this, save the file in the resulting dialog as credentials.json.');
+    console.log('After doing this, create a Desktop app via the dialog and save the file in the resulting dialog as credentials.json.');
   }
   const {
     COHORT, EMAILPASS, EMAILUSER, SPREADSHEETID, TOKEN,
