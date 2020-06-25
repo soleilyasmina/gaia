@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const ghost = require('./ghost');
 const mailer = require('./mailer');
-const provideStudents = require('./auth/students');
+const provideStudents = require('./setup/students');
 const update = require('./setup/update');
 
 const main = async () => {
