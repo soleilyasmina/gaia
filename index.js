@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 const ghost = require('./ghost');
 const mailer = require('./mailer');
-const provideStudents = require('./students');
-const update = require('./update');
+const provideStudents = require('./auth/students');
+const update = require('./setup/update');
 
 const main = async () => {
   const args = process.argv;
