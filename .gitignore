@@ -2,7 +2,7 @@
 credentials.json
 token.json
 auth.txt
-.env
+.env*
 
 # Dependencies
 node_modules/

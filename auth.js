@@ -3,6 +3,8 @@ const fs = require('fs');
 const readline = require('readline');
 const { google } = require('googleapis');
 
+require('dotenv').config();
+
 // scope for readonly
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 
@@ -55,8 +57,10 @@ const authorize = async (credentials, callback) => {
     oAuth2Client.setCredentials(JSON.parse(token));
     return await callback(oAuth2Client);
   } catch (e) {
+    if (e.code === 'ENOENT') {
+      return getNewToken(oAuth2Client, callback);
+    }
     console.log(e);
-    return getNewToken(oAuth2Client, callback);
   }
 };
 
