@@ -7,7 +7,7 @@ const update = require('./update');
 const main = async () => {
   const args = process.argv;
   let test = false;
-  if (args.include('-t') || args.includes('--test')) {
+  if (args.includes('-t') || args.includes('--test')) {
     test = true;
   }
   if (args.includes('-u') || args.includes('--update')) {

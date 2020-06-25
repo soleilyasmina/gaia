@@ -67,6 +67,7 @@ const provideStudentsCallback = async (auth) => {
   // preparing the final output
   const assignedStudents = students.map((item, index) => {
     try {
+      const currentSubmission = submissions ? submissions[index] : [];
       return {
         name: `${item[0]} ${item[1]}`,
         username: item[2],
@@ -74,11 +75,11 @@ const provideStudentsCallback = async (auth) => {
         percentage: item[4],
         absences: attendances[index][0],
         enrollment: enrollments[index][0],
-        submissions: assignHomework(submissions[index]),
+        submissions: assignHomework(currentSubmission),
         index,
       };
     } catch (error) {
-      // console.log(error)
+      console.log(error)
     }
   });
   return [auth, assignedStudents];

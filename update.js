@@ -25,4 +25,4 @@ const update = () => {
   fs.writeFileSync('.env.temp', envStr);
 };
 
-export default update;
+module.exports = update
