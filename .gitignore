@@ -7,3 +7,4 @@ auth.txt
 # Dependencies
 node_modules/
 yarn.lock
+git-over-here/Brewfile.lock.json
