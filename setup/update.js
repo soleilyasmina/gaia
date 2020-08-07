@@ -22,7 +22,7 @@ const update = () => {
     TOKEN,
   };
   const envStr = Object.entries(env).reduce((acc, [key, value]) => acc.concat(`${key}=${value}\n`), '');
-  fs.writeFileSync('.env.temp', envStr);
+  fs.writeFileSync('.env', envStr);
 };
 
 module.exports = update

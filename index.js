@@ -29,7 +29,9 @@ const main = async () => {
     console.log('Thank you for using GAIA.');
   } catch (e) {
     if (e.message === '(intermediate value) is not iterable') {
-      // Nothing's wrong, the readline's just waiting.
+      console.log('Readline is waiting (don\'t worry).');
+    } else {
+      console.log(e.message);
     }
   }
 };
