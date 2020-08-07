@@ -88,7 +88,10 @@ const provideStudentsCallback = async (auth) => {
         console.log(error);
       }
     });
-    return [auth, assignedStudents];
+    return {
+      auth, 
+      students: assignedStudents,
+    };
   } catch (e) {
     console.log(e);
   }

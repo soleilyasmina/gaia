@@ -15,15 +15,15 @@ const main = async () => {
       update();
     }
     if (args.includes('-a') || args.includes('--auth')) {
-      const [auth, students] = await provideStudents();
+      const { students } = await provideStudents();
       console.table(students);
     }
     if (args.includes('-g') || args.includes('--ghost')) {
-      const [auth, students] = await provideStudents();
+      const { auth, students } = await provideStudents();
       await ghost(auth, students, test);
     }
     if (args.includes('-m') || args.includes('--mailedit')) {
-      const [auth, students] = await provideStudents();
+      const { students } = await provideStudents();
       await mailer(students, test);
     }
     console.log('Thank you for using GAIA.');
