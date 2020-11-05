@@ -4,6 +4,9 @@
 auth.txt
 .env*
 
+# Local Files
+random/weight.json
+
 # Dependencies
 node_modules/
 yarn.lock

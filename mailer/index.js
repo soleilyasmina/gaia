@@ -1,6 +1,7 @@
 // Code originally from Andre Pato, @anpato
 const nodemailer = require('nodemailer');
 
+const { filterEnrolled } = require('../helpers');
 const template = require('./template');
 
 require('dotenv').config();
@@ -18,11 +19,7 @@ const mailer = async (students, test) => {
       },
     });
     if (students) {
-      const enrolledStudents = students.filter((stu) => {
-        try {
-          return stu.enrollment !== 'withdrawn';
-        } catch (error) {}
-      });
+      const enrolledStudents = filterEnrolled(students); 
       if (test) {
         await transporter.sendMail({
           from: process.env.EMAILUSER,
