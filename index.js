@@ -1,7 +1,9 @@
 /* eslint-disable no-console */
 const ghost = require('./ghost');
 const mailer = require('./mailer');
+const projects = require('./projects');
 const random = require('./random');
+const { filterEnrolled } = require('./helpers');
 const provideStudents = require('./setup/students');
 const update = require('./setup/update');
 
@@ -30,6 +32,10 @@ const main = async () => {
     if (args.includes('-m') || args.includes('--mailedit')) {
       const { students } = await provideStudents();
       await mailer(students, test);
+    }
+    if (args.includes('-p') || args.includes('--projects')) {
+      const { auth, students } = await provideStudents();
+      await projects(auth, students);
     }
     console.log('Thank you for using GAIA.');
   } catch (e) {

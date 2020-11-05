@@ -76,6 +76,8 @@ const provideStudentsCallback = async (auth) => {
         const currentSubmission = submissions ? submissions[index] : [];
         return {
           name: `${item[0]} ${item[1]}`,
+          firstName: item[0],
+          lastName: item[1],
           username: githubs[index][0],
           email: item[2],
           percentage: item[3],
@@ -89,7 +91,7 @@ const provideStudentsCallback = async (auth) => {
       }
     });
     return {
-      auth, 
+      auth,
       students: assignedStudents,
     };
   } catch (e) {

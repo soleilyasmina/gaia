@@ -11,6 +11,7 @@
     "ghost-test": "node . --ghost --test",
     "mailedit": "node . --mailedit",
     "mailedit-test": "node . --mailedit --test",
+    "projects": "node . --projects",
     "random": "node . --random",
     "update": "node . --update",
     "help": "node setup/manual.js",
