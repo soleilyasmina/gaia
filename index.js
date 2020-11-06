@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+const feedback = require('./feedback');
 const ghost = require('./ghost');
 const mailer = require('./mailer');
 const projects = require('./projects');
@@ -17,13 +18,13 @@ const main = async () => {
     if (args.includes('-u') || args.includes('--update')) {
       update();
     }
-    if (args.includes('-r') || args.includes('--random')) {
-      const { students } = await provideStudents();
-      await random(students);
-    }
     if (args.includes('-a') || args.includes('--auth')) {
       const { students } = await provideStudents();
       console.table(students);
+    }
+    if (args.includes('-r') || args.includes('--random')) {
+      const { students } = await provideStudents();
+      await random(students);
     }
     if (args.includes('-g') || args.includes('--ghost')) {
       const { auth, students } = await provideStudents();
@@ -36,6 +37,10 @@ const main = async () => {
     if (args.includes('-p') || args.includes('--projects')) {
       const { auth, students } = await provideStudents();
       await projects(auth, students);
+    }
+    if (args.includes('-f') || args.includes('--feedback')) {
+      const { auth } = await provideStudents();
+      await feedback(auth, test);
     }
     console.log('Thank you for using GAIA.');
   } catch (e) {
