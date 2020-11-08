@@ -6,7 +6,7 @@
   "scripts": {
     "all": "node . --ghost --mailedit",
     "all-test": "node . --ghost --mailedit --test",
-    "auth-test": "node . --auth",
+    "auth": "node . --auth",
     "feedback": "node . --feedback",
     "feedback-test": "node . --feedback --test",
     "ghost": "node . --ghost",
