@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const fs = require('fs');
 const rl = require('readline-sync');
 
@@ -23,6 +24,7 @@ const update = () => {
   };
   const envStr = Object.entries(env).reduce((acc, [key, value]) => acc.concat(`${key}=${value}\n`), '');
   fs.writeFileSync('.env', envStr);
+  console.log(`Please run ${chalk.bold.green('npm run auth')} to ensure credentials are correct.`);
 };
 
-module.exports = update
+module.exports = update;
