@@ -37,7 +37,7 @@ __GAIA__ comes with a number of tools for TAs, IAs, ILs, and homework graders al
 
 ### Git-Over-Here
 
-__Git-Over-Here__ is a script that reads the GitHub API based on provided repo names and clones down all repos from open pull requests, to make cloning and installing automated. GOH is the only project that does not leverage the course tracker, so this just requires your GitHub token and your current cohort.
+__Git-Over-Here__ is a script that reads the GitHub API based on provided repo names and clones down all repos from open pull requests, to make cloning and installing automated. GOH is the only project that does not leverage the course tracker, so this requires your GitHub token (with repo and gist permissions) and your current cohort.
 
 ### GHOST (Get Homework Onto Spreadsheet Tool)
 
@@ -61,7 +61,7 @@ __Feedback__ is a script that reads the project tracker created above and sends 
 
 ### Update
 
-__Update__ will ask you for your new cohort name and new course tracker spreadsheet id, to keep you moving easily between cohorts.
+__Update__ will ask you for your new cohort name and new course tracker spreadsheet id, to keep you moving between cohorts.
 
 #### Read the manual!
 
