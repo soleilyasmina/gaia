@@ -20,7 +20,7 @@ const main = async () => {
     }
     if (args.includes('-a') || args.includes('--auth')) {
       const { students } = await provideStudents();
-      console.table(students);
+      console.table(filterEnrolled(students));
     }
     if (args.includes('-r') || args.includes('--random')) {
       const { students } = await provideStudents();
