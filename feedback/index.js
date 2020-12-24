@@ -2,7 +2,7 @@
 const fs = require('fs');
 const { google } = require('googleapis');
 const nodemailer = require('nodemailer');
-const rl = require('readline-sync');
+const inquirer = require('inquirer');
 
 require('dotenv').config();
 
@@ -81,10 +81,24 @@ const buildStudents = async (auth, unit) => {
 };
 
 const deliverFeedback = async (auth, test) => {
-  const options = ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 4'];
-  const unit = rl.keyInSelect(options, 'Which unit is this project for?') + 1;
-  if (unit === 0) return;
-  const name = rl.question('What is your name? (Capitalize the first letter.)\n');
+  const { unit } = (await inquirer
+    .prompt([{
+      type: 'rawlist',
+      choices: ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 4', 'Exit'],
+      default: 4,
+      name: 'unit',
+      message: 'What unit is this project for?',
+    }])) + 1;
+  if (unit === 5) return;
+  if (!process.env[`PROJECT_${unit}_SHEETID`]) {
+    console.log('No matching sheet for this unit found! Check your .env file.');
+    return;
+  }
+  const { name } = await inquirer.prompt([{
+    type: 'input',
+    name: 'name',
+    message: 'What is your name? (Capitalize the first letter.)',
+  }]);
   const students = await buildStudents(auth, unit);
   await mailer(students, unit, name, test);
 };
