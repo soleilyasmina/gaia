@@ -6,8 +6,10 @@ auth.txt
 
 # Local Files
 random/weight.json
+git-over-here/homework/*/
 
 # Dependencies
 node_modules/
 yarn.lock
 git-over-here/Brewfile.lock.json
+

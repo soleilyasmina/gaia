@@ -2,7 +2,7 @@
 . style.sh
 
 function main() {
-  DIR=$(echo $3 | sed 's/%20/-/g' | cut -d' ' -f2)
+  DIR=$2
   REPOEXISTS=$(ls | grep $DIR)
   if [ "$5" == "open" ]
   then
@@ -24,7 +24,7 @@ function main() {
 
     if [ -z "$NPMEXISTS" ]
     then
-    echo "No package.json detected.$RED Skipping installation.$RESET"
+      echo "No package.json detected.$RED Skipping installation.$RESET"
     else
       for PKG_JSON in "${NPMEXISTS[@]}"
       do
@@ -69,16 +69,12 @@ do
     -l | --lunch)
       . lunch.txt
       ;;
-    -r | --refresh)
-      REFRESH="true"
-      ;;
     -h | --help)
       echo "usage: sh main.sh [-l | --lunch][-r | --refresh]"
       echo ""
       echo "options:"
       echo "  -h, --help      provides this help screen"
       echo "  -l, --lunch     reads from .env.lunch for repos"
-      echo "  -r, --refresh   no hard delete, replace and remove instead" 
       exit
       ;;
   esac
@@ -88,7 +84,6 @@ done
 printf $GREEN
 printf "${OPENER}"
 printf $RESET
-REFRESH=""
 
 echo "Welcome to Git Over Here,$BLUE $USER$RESET!"
 echo "You're currently pulling from $GREEN$COHORT$RESET."
@@ -102,7 +97,7 @@ fi
 
 for REPO in "${REPOS[@]}"
 do
-  SUCCESS=$(curl "https://git.generalassemb.ly/api/v3/repos/$COHORT/$REPO/pulls" -H "Authorization: token $TOKEN" |\
+  SUCCESS=$(curl "https://git.generalassemb.ly/api/v3/repos/$COHORT/$REPO/pulls" -H "Authorization: token $TOKEN" 2>/dev/null |\
     grep -o "Not Found")
 
   if [ "$SUCCESS" == "Not Found" ]
@@ -110,12 +105,12 @@ do
     printf "$RED"
     echo "Repository not found. Please try again."
   else
-    cd ..
-    if [ -z "$REFRESH" ]
+    if [ -z "$(ls | grep "homework")" ]
     then
-      rm -rf $REPO
+      mkdir homework
     fi
-    if [ -z "$(ls | grep $REPO)"]
+    cd ./homework
+    if [ -z "$(ls | grep $REPO)" ]
     then
       mkdir $REPO
     fi
@@ -124,9 +119,9 @@ do
     printf "$GREEN"
     echo "Repository found for $REPO!"
     printf "$RESET"
-    OPENPRS="$(curl https://git.generalassemb.ly/api/v3/repos/$COHORT/$REPO/pulls\?state\=all -H "Authorization: token $TOKEN" | jq '.[] | .state' | grep "open" | wc -l | awk '$1=$1')"
+    OPENPRS="$(curl https://git.generalassemb.ly/api/v3/repos/$COHORT/$REPO/pulls\?state\=all -H "Authorization: token $TOKEN" --silent | jq '.[] | .state' | grep "open" | wc -l | awk '$1=$1')"
     echo "You have $OPENPRS submissions, cloning into$BLUE $REPO$RESET."
-    curl "https://git.generalassemb.ly/api/v3/repos/$COHORT/$REPO/pulls?state=all" -H "Authorization: token $TOKEN" |\
+    curl "https://git.generalassemb.ly/api/v3/repos/$COHORT/$REPO/pulls?state=all" -H "Authorization: token $TOKEN" 2>/dev/null |\
       jq '.[] | @uri "\(.user.login) \(.title) \(.head.ref) \(.state)"' |\
       xargs -L 4 -I {} sh -c "main $REPO {}"
   fi
