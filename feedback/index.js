@@ -34,6 +34,7 @@ const mailer = async (students, unit, name, test) => {
           text: fillTemplate(students[0], unit, name, template),
         });
         console.log(`Sending test email for ${students[0].name} to ${process.env.EMAILUSER}.`);
+        transporter.close();
       } else {
         await students.forEach(async (student) => {
           await transporter.sendMail({
