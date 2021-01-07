@@ -1,16 +1,22 @@
 const { google } = require('googleapis');
 const axios = require('axios');
 const fs = require('fs');
-const rl = require('readline-sync');
+const inquirer = require('inquirer');
 
 const { filterEnrolled } = require('../helpers');
 // populate first / last name columns, emails from enrolled students (google-auth)
 // create gists for individual with template (inside this folder?) (axios)
 
 const createProject = async (sheets) => {
-  const options = ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 4'];
-  const unit = rl.keyInSelect(options, 'Which unit is this project for?') + 1;
-  if (unit === 0) return;
+  const { unit } = (await inquirer
+    .prompt([{
+      type: 'rawlist',
+      choices: ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 4', 'Exit'],
+      default: 4,
+      name: 'unit',
+      message: 'What unit is this project for?',
+    }])) + 1;
+  if (unit === 5) return;
   const cohort = process.env.COHORT.split('-')[2].toUpperCase();
   const title = `${cohort} | Project ${unit} Tracker`;
   const newSheet = await sheets.spreadsheets.create({

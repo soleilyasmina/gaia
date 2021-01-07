@@ -1,23 +1,11 @@
 {
   "name": "homework-tracker",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "A series of tools for GA IAs and TAs.",
   "main": "index.js",
   "scripts": {
-    "all": "node . --ghost --mailedit",
-    "all-test": "node . --ghost --mailedit --test",
-    "auth": "node . --auth",
-    "feedback": "node . --feedback",
-    "feedback-test": "node . --feedback --test",
-    "ghost": "node . --ghost",
-    "ghost-test": "node . --ghost --test",
-    "mailedit": "node . --mailedit",
-    "mailedit-test": "node . --mailedit --test",
-    "projects": "node . --projects",
-    "random": "node . --random",
-    "update": "node . --update",
-    "help": "node setup/manual.js",
-    "setup": "node setup/index.js && cd git-over-here && brew bundle install && cd .."
+    "start": "node index.js",
+    "setup": "npm install && cd git-over-here && brew bundle install && cd .."
   },
   "keywords": [],
   "author": "Soleil Solomon, Andre Pato and Jordan Cruz-Correa",
@@ -28,8 +16,8 @@
     "dotenv": "^8.0.0",
     "fs": "0.0.1-security",
     "googleapis": "^39.2.0",
-    "nodemailer": "^6.3.0",
-    "readline-sync": "^1.4.9"
+    "inquirer": "^7.3.3",
+    "nodemailer": "^6.3.0"
   },
   "devDependencies": {
     "eslint": "^6.5.1",

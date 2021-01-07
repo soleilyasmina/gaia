@@ -28,6 +28,7 @@ const mailer = async (students, test) => {
           html: template(enrolledStudents[0]),
         });
         console.log(`Sending test email for ${enrolledStudents[0].name} to ${process.env.EMAILUSER}.`)
+        transporter.close();
       } else {
         await enrolledStudents.forEach(async (student) => {
           await transporter.sendMail({
