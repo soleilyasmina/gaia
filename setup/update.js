@@ -29,15 +29,15 @@ const update = () => {
   ]).then((answers) => {
     const env = {
       COHORT: answers.COHORT,
-      EMAILUSER: EMAILUSER || answers.EMAILUSER,
-      EMAILPASS: EMAILPASS || answers.EMAILPASS,
+      EMAILUSER,
+      EMAILPASS,
       SPREADSHEETID: answers.SPREADSHEETID,
-      TOKEN: TOKEN || answers.TOKEN,
+      TOKEN,
     };
 
     const envStr = Object.entries(env).reduce((acc, [key, value]) => acc.concat(`${key}=${value}\n`), '');
     fs.writeFileSync('.env', envStr);
-    console.log(`Please run ${chalk.bold.green('npm run auth')} to ensure credentials are correct.`);
+    console.log(`Please run ${chalk.bold.green('npm start')} and select ${chalk.bold.green('status')} to ensure credentials are correct.`);
   });
 };
 

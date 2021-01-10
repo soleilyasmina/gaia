@@ -24,7 +24,7 @@ const setup = () => {
     {
       type: 'input',
       name: 'EMAILUSER',
-      message: 'Please enter the name of your cohort on Github (e.g. sei-nyc-bees).',
+      message: 'Please enter your General Assembly e-mail address.',
     },
     {
       type: 'input',
@@ -51,7 +51,7 @@ const setup = () => {
     };
     const envStr = Object.entries(env).reduce((acc, [key, value]) => acc.concat(`${key}=${value}\n`), '');
     fs.writeFileSync('.env', envStr);
-    console.log(`Please run ${chalk.bold.green('npm run auth')} to ensure credentials are correct.`);
+    console.log(`Please run ${chalk.bold.green('npm start')} and select ${chalk.bold.green('status')} to ensure credentials are correct.`);
   });
 };
 
