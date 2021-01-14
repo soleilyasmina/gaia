@@ -19,9 +19,5 @@
     "inquirer": "^7.3.3",
     "nodemailer": "^6.3.0"
   },
-  "devDependencies": {
-    "eslint": "^6.5.1",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.18.2"
-  }
+  "devDependencies": {}
 }
