@@ -4,18 +4,18 @@
 function main() {
   DIR=$2
   REPOEXISTS=$(ls | grep $DIR)
-  if [ "$5" == "open" ]
+  if [ "$4" == "open" ]
   then
     if [ -z "$REPOEXISTS" ]
     then
       # CLONE
       echo "Cloning down $DIR."
-      git clone --single-branch --branch $4 "https://git.generalassemb.ly/$2/$1.git" --quiet $DIR
+      git clone --single-branch --branch $3 "https://git.generalassemb.ly/$2/$1.git" --quiet $DIR
       cd $DIR
     else
       # PULL FROM CURRENT BRANCH
       cd $DIR
-      git pull origin $4
+      git pull origin $3
     fi
 
     echo "Checking dependencies for $DIR."
@@ -46,7 +46,7 @@ function main() {
     cd ..
   fi
 
-  if [ "$5" == "closed" ] && [ -n "$REPOEXISTS" ]
+  if [ "$4" == "closed" ] && [ -n "$REPOEXISTS" ]
   then
     echo "$DIR's homework is closed, removing directory."
     rm -rf $DIR
@@ -122,7 +122,7 @@ do
     OPENPRS="$(curl https://git.generalassemb.ly/api/v3/repos/$COHORT/$REPO/pulls\?state\=all -H "Authorization: token $TOKEN" --silent | jq '.[] | .state' | grep "open" | wc -l | awk '$1=$1')"
     echo "You have $OPENPRS submissions, cloning into$BLUE $REPO$RESET."
     curl "https://git.generalassemb.ly/api/v3/repos/$COHORT/$REPO/pulls?state=all" -H "Authorization: token $TOKEN" 2>/dev/null |\
-      jq '.[] | @uri "\(.user.login) \(.title) \(.head.ref) \(.state)"' |\
+      jq '.[] | @uri "\(.user.login) \(.head.ref) \(.state)"' |\
       xargs -L 4 -I {} sh -c "main $REPO {}"
   fi
 
