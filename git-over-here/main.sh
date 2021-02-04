@@ -30,7 +30,12 @@ function main() {
       do
         echo "Installing JS dependencies for $(dirname $PKG_JSON | sed "s/./$DIR/" )."
         cd $(dirname $PKG_JSON)
-        npm i --silent
+        if which yarn > /dev/null
+        then
+          yarn install --silent
+        else
+          npm i --silent
+        fi
         cd - > /dev/null
       done
     fi
