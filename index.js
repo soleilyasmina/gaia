@@ -6,6 +6,7 @@ const mailer = require("./mailer");
 const projects = require("./projects");
 const random = require("./random");
 const setup = require("./setup");
+const wiki = require("./wiki");
 const manual = require("./setup/manual");
 const update = require("./setup/update");
 const { filterEnrolled } = require("./helpers");
@@ -25,6 +26,7 @@ const main = async () => {
             "ghost",
             "mailedit",
             "random",
+            "wiki",
             new Separator(),
             "projects",
             "feedback",
@@ -78,6 +80,9 @@ const main = async () => {
           break;
         case "feedback":
           await feedback(auth, test);
+          break;
+        case "wiki":
+          await wiki(auth);
           break;
         default:
           console.table(filterEnrolled(students));
