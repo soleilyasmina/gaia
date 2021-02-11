@@ -1,5 +1,6 @@
 const { google } = require("googleapis");
 const fs = require("fs");
+const chalk = require("chalk");
 const { prompt } = require("inquirer");
 const table = require("markdown-table");
 
@@ -27,7 +28,6 @@ const buildLessons = async (auth, { unit, spreadsheetId }) => {
       ranges: [`${unit}!A1:K140`],
       includeGridData: true,
     });
-    console.log(lessonsData.data.sheets[0].data[0].rowData);
     const lessons = lessonsData.data.sheets[0].data[0].rowData
       .map(({ values }) => values)
       .filter((val) => val[1] !== "")
@@ -70,14 +70,19 @@ const buildDays = (lessons) => {
     [[]]
   );
   const realDays = separatedDays.filter((day) => day.length > 0);
-  console.log(realDays);
   const tableTime = table([
     ["Date", "Type", "Repo", "Solution", "Recording"],
-    ...realDays.flat().map((line) => [
+    ...realDays
+      .flat()
+      .map((line) => [
         line.date,
         line.type,
         line.link ? `[${line.name}](${line.link})` : line.name ? line.name : "",
-      line.solutionLink ? `[${line.solution}](${line.solutionLink})` : line.solution ? `[${line.solution}](${line.link}/tree/solution)` : "",
+        line.solutionLink
+          ? `[${line.solution}](${line.solutionLink})`
+          : line.solution
+          ? `[${line.solution}](${line.link}/tree/solution)`
+          : "",
         line.zoom,
       ]),
   ]);
@@ -89,11 +94,12 @@ const createWiki = async (auth) => {
   const results = await inquire();
   const lessons = await buildLessons(auth, results);
   const days = buildDays(lessons);
-  fs.writeFileSync(
-    `./wiki/${process.env.COHORT}-${results.unit
-      .replace(/\ /g, "-")
-      .toLowerCase()}-wiki.md`,
-    days
+  const wikiFilename = `./wiki/${process.env.COHORT}-${results.unit.replace(/\ /g, "-").toLowerCase()}-wiki.md`;
+  fs.writeFileSync(wikiFilename, days);
+  console.log(
+    `${chalk.bold.green(results.unit)} Wiki written for ${chalk.bold.green(
+      process.env.COHORT
+    )} at ${chalk.bold.green(wikiFilename)}!`
   );
 };
 
