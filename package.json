@@ -1,6 +1,6 @@
 {
   "name": "homework-tracker",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "A series of tools for GA IAs and TAs.",
   "main": "index.js",
   "scripts": {
