@@ -17,6 +17,11 @@ const inquire = async () => {
       type: "input",
       name: "spreadsheetId",
     },
+    {
+      message: "Please enter the name of your cohort.",
+      type: "input",
+      name: "cohort"
+    }
   ]);
 };
 
@@ -25,7 +30,7 @@ const buildLessons = async (auth, { unit, spreadsheetId }) => {
     const sheets = google.sheets({ version: "v4", auth });
     const lessonsData = await sheets.spreadsheets.get({
       spreadsheetId,
-      ranges: [`${unit}!A1:K140`],
+      ranges: [`${unit}!A1:K200`],
       includeGridData: true,
     });
     const lessons = lessonsData.data.sheets[0].data[0].rowData
@@ -94,11 +99,11 @@ const createWiki = async (auth) => {
   const results = await inquire();
   const lessons = await buildLessons(auth, results);
   const days = buildDays(lessons);
-  const wikiFilename = `./wiki/${process.env.COHORT}-${results.unit.replace(/\ /g, "-").toLowerCase()}-wiki.md`;
+  const wikiFilename = `./wiki/${results.cohort}-${results.unit.replace(/\ /g, "-").toLowerCase()}-wiki.md`;
   fs.writeFileSync(wikiFilename, days);
   console.log(
     `${chalk.bold.green(results.unit)} Wiki written for ${chalk.bold.green(
-      process.env.COHORT
+      results.cohort
     )} at ${chalk.bold.green(wikiFilename)}!`
   );
 };
