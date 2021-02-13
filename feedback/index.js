@@ -31,7 +31,7 @@ const mailer = async (students, unit, name, test) => {
           from: process.env.EMAILUSER,
           to: process.env.EMAILUSER,
           subject: 'Test Project Feedback',
-          text: fillTemplate(students[0], unit, name, template),
+          text: fillTemplate(students[0], unit.split(' ')[1], name, template),
         });
         console.log(`Sending test email for ${students[0].name} to ${process.env.EMAILUSER}.`);
         transporter.close();
@@ -41,7 +41,7 @@ const mailer = async (students, unit, name, test) => {
             from: process.env.EMAILUSER,
             to: student.email,
             subject: 'Project Feedback',
-            text: fillTemplate(student, unit, name, template),
+            text: fillTemplate(student, unit.split(' ')[1], name, template),
           });
           console.log(`Sending email to ${student.name} at ${student.email}.`);
           sent += 1;
@@ -61,7 +61,7 @@ const mailer = async (students, unit, name, test) => {
 const buildStudents = async (auth, unit) => {
   try {
     const sheets = google.sheets({ version: 'v4', auth });
-    const spreadsheetId = process.env[`PROJECT_${unit}_SHEETID`];
+    const spreadsheetId = process.env[`PROJECT_${unit.split(' ')[1]}_SHEETID`];
     const studentsData = await sheets.spreadsheets.values.get({
       spreadsheetId,
       range: 'Copy of Project Completions!A2:F50',
@@ -81,16 +81,16 @@ const buildStudents = async (auth, unit) => {
 };
 
 const deliverFeedback = async (auth, test) => {
-  const { unit } = (await inquirer
+  const { unit } = await inquirer
     .prompt([{
       type: 'rawlist',
       choices: ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 4', 'Exit'],
       default: 4,
       name: 'unit',
       message: 'What unit is this project for?',
-    }])) + 1;
-  if (unit === 5) return;
-  if (!process.env[`PROJECT_${unit}_SHEETID`]) {
+    }]);
+  if (unit + 1 === 5) return;
+  if (!process.env[`PROJECT_${unit.split(' ')[1]}_SHEETID`]) {
     console.log('No matching sheet for this unit found! Check your .env file.');
     return;
   }
