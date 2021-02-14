@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { google } = require('googleapis');
 
-const authorize = require('./auth');
+const { authorize } = require('./auth');
 
 const provideStudentsCallback = async (auth) => {
   try {
@@ -101,8 +101,7 @@ const provideStudentsCallback = async (auth) => {
 
 const provideStudents = async () => {
   try {
-    const content = fs.readFileSync('./setup/credentials.json');
-    return await authorize(JSON.parse(content), provideStudentsCallback);
+    return await authorize(provideStudentsCallback);
   } catch (e) {
     return console.log('Error loading client secret file:', e);
   }

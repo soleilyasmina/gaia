@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+const fs = require('fs');
 const { prompt, Separator } = require("inquirer");
 const feedback = require("./feedback");
 const ghost = require("./ghost");
@@ -11,12 +12,14 @@ const manual = require("./setup/manual");
 const update = require("./setup/update");
 const { filterEnrolled } = require("./helpers");
 const provideStudents = require("./setup/students");
+const { getNewToken } = require('./setup/auth');
 
 const main = async () => {
   try {
-    if (!process.env.TOKEN) {
+    if (!fs.existsSync(__dirname + "/setup/token.json")) {
       setup();
     } else {
+      const { auth, students } = await provideStudents();
       const { choice } = await prompt([
         {
           message: "Welcome to GAIA! What would you like to run today?",
@@ -52,7 +55,6 @@ const main = async () => {
           ])
         ).test;
       }
-      const { auth, students } = await provideStudents();
       switch (choice) {
         case "setup":
           setup();
