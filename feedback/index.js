@@ -7,12 +7,12 @@ const path = require("path");
 
 require("dotenv").config();
 
-const fillTemplate = (student, unit, name, template) =>
+const fillTemplate = (student, unit, config, template) =>
   template
     .replace("[FIRSTNAME]", student.firstName)
     .replace("[UNIT]", unit)
     .replace("[GIST]", student.gist)
-    .replace("[INSTRUCTORNAME]", name);
+    .replace("[INSTRUCTORNAME]", `${config.config.name} (${config.config.pronouns.join('/')})`);
 
 const mailer = async (students, unit, config, test) => {
   try {
@@ -33,7 +33,7 @@ const mailer = async (students, unit, config, test) => {
           from: config.config.emailUser,
           to: config.config.emailUser,
           subject: "Test Project Feedback",
-          text: fillTemplate(students[0], unit, config.config.name, template),
+          text: fillTemplate(students[0], unit, config, template),
         });
         console.log(
           `Sending test email for ${students[0].name} to ${config.config.emailUser}.`
@@ -45,7 +45,7 @@ const mailer = async (students, unit, config, test) => {
             from: config.config.emailUser,
             to: student.email,
             subject: "Project Feedback",
-            text: fillTemplate(student, unit, config.config.name, template),
+            text: fillTemplate(student, unit, config, template),
           });
           console.log(`Sending email to ${student.name} at ${student.email}.`);
           sent += 1;

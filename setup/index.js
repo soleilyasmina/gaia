@@ -28,6 +28,14 @@ const setup = () => {
           when: () => !config.config.name,
         },
         {
+          type: "checkbox",
+          name: "pronouns",
+          message: "Please check all pronouns you use.",
+          choices: ["they/them", "she/her", "he/him"],
+          default: ["they/them"],
+          when: () => !config.config.pronouns
+        },
+        {
           type: "input",
           name: "emailUser",
           message: "Please enter your General Assembly e-mail address.",
@@ -84,6 +92,7 @@ const setup = () => {
             emailPass: config.config.emailPass || answers.emailPass,
             cohort: config.config.cohort || answers.cohort,
             name: config.config.name || answers.name,
+            pronouns: config.config.pronouns || answers.pronouns,
           },
           cohorts: {
             ...config.cohorts,
