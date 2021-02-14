@@ -16,7 +16,7 @@ const { getNewToken } = require('./setup/auth');
 
 const main = async () => {
   try {
-    if (!fs.existsSync(__dirname + "/setup/token.json")) {
+    if (!fs.existsSync(__dirname + "/config.json") || !fs.existsSync(__dirname + "/setup/token.json")) {
       setup();
     } else {
       const { auth, students } = await provideStudents();

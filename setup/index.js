@@ -2,7 +2,7 @@ const chalk = require("chalk");
 const fs = require("fs");
 const inquirer = require("inquirer");
 const path = require("path");
-const { getNewToken } = require('./auth');
+const { getNewToken } = require("./auth");
 
 require("dotenv").config();
 
@@ -87,6 +87,11 @@ const setup = () => {
         };
         fs.writeFileSync(configPath, JSON.stringify(newConfig, null, 2));
         console.log(
+          `${chalk.bold.green("config.json")} written at ${chalk.bold.green(
+            configPath
+          )}!`
+        );
+        console.log(
           `Please run ${chalk.bold.green(
             "npm start"
           )} and select ${chalk.bold.green(
@@ -96,7 +101,6 @@ const setup = () => {
         getNewToken();
       });
   } catch (e) {
-    console.log(e.message);
     console.log(
       `No credentials found. Open this link with your General Assembly e-mail, and enable the Google Sheets API: ${chalk.blue.underline(
         "https://developers.google.com/sheets/api/quickstart/nodejs"
