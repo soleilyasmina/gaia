@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { google } = require('googleapis');
+const path = require("path");
 
 const { authorize } = require('./auth');
 
@@ -8,9 +9,14 @@ const provideStudentsCallback = async (auth) => {
   // it's time for us to grab some data
     const sheets = google.sheets({ version: 'v4', auth });
     // grab the individual students names
+    
+    const configPath = path.resolve(__dirname, "../config.json");
+    const config = JSON.parse(fs.readFileSync(configPath));
+
+    const spreadsheetId = config.cohorts[config.config.cohort].courseTracker;
 
     const studentIdData = await sheets.spreadsheets.values.get({
-      spreadsheetId: process.env.SPREADSHEETID,
+      spreadsheetId,
       range: 'Course Roster and Progress!B5:B50',
     });
 
@@ -18,28 +24,28 @@ const provideStudentsCallback = async (auth) => {
       .length;
 
     const studentsData = await sheets.spreadsheets.values.get({
-      spreadsheetId: process.env.SPREADSHEETID,
+      spreadsheetId,
       range: `HW Completion!B6:E${6 + totalStudents - 1}`,
     });
     const enrollmentData = await sheets.spreadsheets.values.get({
-      spreadsheetId: process.env.SPREADSHEETID,
+      spreadsheetId,
       range: `Course Roster and Progress!F5:F${5 + totalStudents - 1}`,
     });
     const githubData = await sheets.spreadsheets.values.get({
-      spreadsheetId: process.env.SPREADSHEETID,
+      spreadsheetId,
       range: `Course Roster and Progress!H5:H${5 + totalStudents - 1}`,
     });
     const assignmentsData = await sheets.spreadsheets.values.get({
-      spreadsheetId: process.env.SPREADSHEETID,
+      spreadsheetId,
       range: 'HW Completion!F5:BD5',
       valueRenderOption: 'FORMULA',
     });
     const submissionsData = await sheets.spreadsheets.values.get({
-      spreadsheetId: process.env.SPREADSHEETID,
+      spreadsheetId,
       range: `HW Completion!F6:BD${6 + totalStudents - 1}`,
     });
     const attendancesData = await sheets.spreadsheets.values.get({
-      spreadsheetId: process.env.SPREADSHEETID,
+      spreadsheetId,
       range: `Attendance!E11:E${11 + totalStudents - 1}`,
     });
 
