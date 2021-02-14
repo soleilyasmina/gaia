@@ -3,7 +3,9 @@
     "cohort": "sei-nyc-pizza",
     "emailUser": "mother.gaia@generalassemb.ly",
     "emailPass": "gudnwlburutfbzas",
-    "token": "10ea12f412237e5232e817ee42485393a9c4248b"
+    "token": "10ea12f412237e5232e817ee42485393a9c4248b",
+    "name": "Mother",
+    "pronouns": ["she/her"]
   },
   "cohorts": {
     "sei-nyc-pizza": {
