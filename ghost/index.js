@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 const axios = require('axios');
 const { google } = require('googleapis');
+const fs = require("fs");
+const path = require("path");
 
 require('dotenv').config();
 
@@ -23,7 +25,7 @@ const toColumn = num => {
   return column;
 };
 
-const parsePullRequestJSON = async link => {
+const parsePullRequestJSON = async (link, config) => {
   if (link === undefined) return [];
   const [organization, repository] = link
     .replace(`${BASE_URL}/`, '')
@@ -32,7 +34,7 @@ const parsePullRequestJSON = async link => {
   try {
     const resp = await axios.get(convertedLink, {
       headers: {
-        Authorization: `token ${process.env.TOKEN}`,
+        Authorization: `token ${config.config.token}`,
       },
     });
     const pullRequests = resp.data.map((req) => {
@@ -48,14 +50,14 @@ const parsePullRequestJSON = async link => {
   }
 };
 
-const createColumns = async (students) => {
+const createColumns = async (students, config) => {
   const assignments = students[0].submissions.map((stu) => stu.link);
   const columns = await Promise.all(
     await assignments.map(async (assignment, index) => {
       try {
         if (assignment === undefined) return;
         const values = [];
-        const pullRequests = await parsePullRequestJSON(assignment);
+        const pullRequests = await parsePullRequestJSON(assignment, config);
         students.forEach((stu) => {
           if (!stu) {
             values.push('');
@@ -95,11 +97,13 @@ const createColumns = async (students) => {
 };
 
 const ghost = async (auth, students, test) => {
-  const columns = await createColumns(students);
+  const configPath = path.resolve(__dirname, "../config.json");
+  const config = JSON.parse(fs.readFileSync(configPath));
+  const columns = await createColumns(students, config);
   const sheets = google.sheets({ version: 'v4', auth });
   if (!test) {
     await sheets.spreadsheets.values.batchUpdate({
-      spreadsheetId: process.env.SPREADSHEETID,
+      spreadsheetId: config.cohorts[config.config.cohort].courseTracker,
       resource: {
         data: columns,
         valueInputOption: 'USER_ENTERED',
