@@ -2,9 +2,13 @@ const { google } = require("googleapis");
 const fs = require("fs");
 const chalk = require("chalk");
 const { prompt } = require("inquirer");
+const path = require("path");
 const table = require("markdown-table");
 
 const inquire = async () => {
+  const config = JSON.parse(
+    fs.readFileSync(path.resolve(__dirname, "../config.json"))
+  );
   return prompt([
     {
       message: "What unit do you want to make this wiki for?",
@@ -13,15 +17,17 @@ const inquire = async () => {
       name: "unit",
     },
     {
-      message: "Please enter the spreadsheet id.",
+      message: `Please enter the name of your cohort, or press enter for your current cohort!`,
       type: "input",
-      name: "spreadsheetId",
+      name: "cohort",
+      default: config.config.cohort,
     },
     {
-      message: "Please enter the name of your cohort.",
+      message: `Please enter the curriculum roadmap spreadsheet id, or press enter for your current cohort!`,
       type: "input",
-      name: "cohort"
-    }
+      name: "spreadsheetId",
+      default: config.cohorts[config.config.cohort].curriculumRoadmap,
+    },
   ]);
 };
 
@@ -99,7 +105,9 @@ const createWiki = async (auth) => {
   const results = await inquire();
   const lessons = await buildLessons(auth, results);
   const days = buildDays(lessons);
-  const wikiFilename = `./wiki/${results.cohort}-${results.unit.replace(/\ /g, "-").toLowerCase()}-wiki.md`;
+  const wikiFilename = `./wiki/${results.cohort}-${results.unit
+    .replace(/\ /g, "-")
+    .toLowerCase()}-wiki.md`;
   fs.writeFileSync(wikiFilename, days);
   console.log(
     `${chalk.bold.green(results.unit)} Wiki written for ${chalk.bold.green(
