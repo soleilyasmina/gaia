@@ -3,6 +3,7 @@
 */token.json
 auth.txt
 .env*
+config.json
 
 # Local Files
 random/weight.json
