@@ -6,10 +6,10 @@ const { authorize } = require('./auth');
 
 const provideStudentsCallback = async (auth) => {
   try {
-  // it's time for us to grab some data
+    // it's time for us to grab some data
     const sheets = google.sheets({ version: 'v4', auth });
     // grab the individual students names
-    
+
     const configPath = path.resolve(__dirname, "../config.json");
     const config = JSON.parse(fs.readFileSync(configPath));
 
@@ -35,10 +35,10 @@ const provideStudentsCallback = async (auth) => {
       spreadsheetId,
       range: `Course Roster and Progress!H5:H${5 + totalStudents - 1}`,
     });
-    const assignmentsData = await sheets.spreadsheets.values.get({
+    const assignmentsData = await sheets.spreadsheets.get({
       spreadsheetId,
-      range: 'HW Completion!F5:BD5',
-      valueRenderOption: 'FORMULA',
+      ranges: ['HW Completion!F5:BD5'],
+      includeGridData: true,
     });
     const submissionsData = await sheets.spreadsheets.values.get({
       spreadsheetId,
@@ -51,8 +51,8 @@ const provideStudentsCallback = async (auth) => {
 
     const students = studentsData.data.values;
     // remove any not filled in homework
-    const assignments = assignmentsData.data.values[0].filter(
-      (item) => !item.match(/[HW] [\d]/),
+    const assignments = assignmentsData.data.sheets[0].data[0].rowData[0].values.filter(
+      (item) => !!item.hyperlink
     );
     const submissions = submissionsData.data.values;
     const attendances = attendancesData.data.values;
@@ -61,18 +61,10 @@ const provideStudentsCallback = async (auth) => {
 
     // convert homework from formula to items
     const assignHomework = (studentSubmissions) => assignments.map((item, index) => {
-      let [link, name] = item
-        .replace('=HYPERLINK(', '')
-        .replace(/[")]/g, '')
-        .split(',');
-      if (!name) {
-        name = link;
-        link = undefined;
-      }
       return {
         completion: studentSubmissions[index],
-        link,
-        name,
+        link: item.hyperlink,
+        name: item.formattedValue,
       };
     });
 
