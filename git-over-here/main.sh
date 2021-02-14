@@ -1,4 +1,5 @@
-. ../.env
+TOKEN=$(cat ../config.json | jq --raw-output '.config.token')
+COHORT=$(cat ../config.json | jq --raw-output '.config.cohort')
 . style.sh
 
 function main() {
@@ -30,7 +31,7 @@ function main() {
       do
         echo "Installing JS dependencies for $(dirname $PKG_JSON | sed "s/./$DIR/" )."
         cd $(dirname $PKG_JSON)
-        if which yarn > /dev/null
+        if which yarn > /dev/null && [[ -f yarn.lock ]]
         then
           yarn install --silent
         else
