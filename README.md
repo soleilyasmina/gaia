@@ -41,7 +41,6 @@ Clone this repository onto your local machine. Once you have this repo cloned do
     - __courseTracker__: the id of your course tracker spreadsheet. If your spreadsheet's URL looks like `https://docs.google.com/spreadsheets/d/1OWV6mCdWV4pKIj8UaK89V7GF7gdhs87tHxeOHwp0NmA/edit#gid=122047201298`, you'll want to enter `1OWV6mCdWV4pKIj8UaK89V7GF7gdhs87tHxeOHwp0NmA`.
     - __curriculumRoadmap__: the id of your curriculum roadmap spreadsheet. If your spreadsheet's URL looks like `https://docs.google.com/spreadsheets/d/1OWV6mCdWV4pKIj8UaK89V7GF7gdhs87tHxeOHwp0NmA/edit#gid=122047201298`, you'll want to enter `1OWV6mCdWV4pKIj8UaK89V7GF7gdhs87tHxeOHwp0NmA`.
 3. Finally, you can run `npm start` and select `status` to ensure that you are fully connected. If you are, you should see a console.table of your current cohort's information.
-:W
 
 ## So I've set up. What can I do?
 
