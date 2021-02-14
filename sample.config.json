@@ -1,0 +1,18 @@
+{
+  "config": {
+    "cohort": "sei-nyc-pizza",
+    "emailUser": "mother.gaia@generalassemb.ly",
+    "emailPass": "gudnwlburutfbzas",
+    "token": "10ea12f412237e5232e817ee42485393a9c4248b"
+  },
+  "cohorts": {
+    "sei-nyc-pizza": {
+      "curriculumRoadmap": "BKihTWkPp_Uq5iZiwXlyO6TXgb2bh9jvvi_2EJS0NidSSHh_YZImcsL9HTI",
+      "courseTracker": "qm7Jiq_hmTZ_igWRSETVJFqZbRWvkGbJOI-YAJFZ7HHj4zcs2BEz4BnXCck",
+      "project1Tracker": "P76qUra4OHEaKRpoYqGMLraaTsH4NZMl6qMoOaFqV7H9Y1wIOr9dkBSa6Fo",
+      "project2Tracker": "7iXifoFTlikHOD-tMHrQDUU0XSBlYgRUqWbe2nVLEtaFP8jr66XOWOuckik",
+      "project3Tracker": "b-0DsITjVhQqpzOy_HtMS-8kRk1-eQDKxKMshJB5ghCWQ4TzuoCHCISI6fY",
+      "project4Tracker": "l_4TjO7b_l0-rvXRFIsQ6I6KrXNBSCisfB9FPz0RT1n2gkk-B2ZUNcss3c0"
+    }
+  }
+}
