@@ -22,6 +22,13 @@ const setup = () => {
       .prompt([
         {
           type: "input",
+          name: "name",
+          message:
+            "Please enter your first name (how you will sign in e-mails):",
+          when: () => !config.config.name,
+        },
+        {
+          type: "input",
           name: "emailUser",
           message: "Please enter your General Assembly e-mail address.",
           when: () => !config.config.emailUser,
@@ -72,10 +79,11 @@ const setup = () => {
         const newConfig = {
           ...config,
           config: {
-            token: config.token || answers.token,
-            emailUser: config.emailUser || answers.emailUser,
-            emailPass: config.emailPass || answers.emailPass,
-            cohort: config.cohort || answers.cohort,
+            token: config.config.token || answers.token,
+            emailUser: config.config.emailUser || answers.emailUser,
+            emailPass: config.config.emailPass || answers.emailPass,
+            cohort: config.config.cohort || answers.cohort,
+            name: config.config.name || answers.name,
           },
           cohorts: {
             ...config.cohorts,
@@ -98,7 +106,9 @@ const setup = () => {
             "status"
           )} to ensure credentials are correct.`
         );
-        getNewToken();
+        if (!fs.existsSync(__dirname + "/token.json")) {
+          getNewToken();
+        }
       });
   } catch (e) {
     console.log(
