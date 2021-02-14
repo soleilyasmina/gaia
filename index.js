@@ -5,7 +5,6 @@ const feedback = require("./feedback");
 const ghost = require("./ghost");
 const mailer = require("./mailer");
 const projects = require("./projects");
-const random = require("./random");
 const setup = require("./setup");
 const wiki = require("./wiki");
 const manual = require("./setup/manual");
@@ -28,7 +27,6 @@ const main = async () => {
           choices: [
             "ghost",
             "mailedit",
-            "random",
             "wiki",
             new Separator(),
             "projects",
@@ -67,9 +65,6 @@ const main = async () => {
           break;
         case "help":
           manual();
-          break;
-        case "random":
-          await random(students);
           break;
         case "ghost":
           await ghost(auth, students, test);

@@ -11,7 +11,6 @@ const manual = () => {
   console.log(`${chalk.bold.green('Projects')}: This tool sources data from the course tracker to create a project tracker.`);
   console.log(`${chalk.bold.green('Feedback')}: This tool sources the project tracker to send feedback to students.`);
   console.log(`${chalk.bold.red('\nHOMEWORK && PROGRESS\n')}`);
-  console.log(`${chalk.bold.green('Random')}: This tool sources data from the course tracker and pulls a random student with weighted picks over time.`);
   console.log(`${chalk.bold.green('GHOST')}: This tool sources data from GitHub to provide real-time information regarding homework completion, and updates the course tracker accordingly.`);
   console.log(`${chalk.bold.green('Mailed It!')}: This tool sources data from the course tracker to send a progress report.`);
 };
