@@ -129,7 +129,7 @@ do
     echo "You have $OPENPRS submissions, cloning into$BLUE $REPO$RESET."
     curl "https://git.generalassemb.ly/api/v3/repos/$COHORT/$REPO/pulls?state=all" -H "Authorization: token $TOKEN" 2>/dev/null |\
       jq '.[] | @uri "\(.user.login) \(.head.ref) \(.state)"' |\
-      xargs -L 4 -I {} sh -c "main $REPO {}"
+      xargs -L 4 -I {} bash -c "main $REPO {}"
   fi
 
   printf "$RESET"
