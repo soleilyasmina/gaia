@@ -37,12 +37,12 @@ const provideStudentsCallback = async (auth) => {
     });
     const assignmentsData = await sheets.spreadsheets.get({
       spreadsheetId,
-      ranges: ['HW Completion!F5:BD5'],
+      ranges: ['HW Completion!F5:ZZ5'],
       includeGridData: true,
     });
     const submissionsData = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: `HW Completion!F6:BD${6 + totalStudents - 1}`,
+      range: `HW Completion!F6:ZZ${6 + totalStudents - 1}`,
     });
     const attendancesData = await sheets.spreadsheets.values.get({
       spreadsheetId,
@@ -61,6 +61,9 @@ const provideStudentsCallback = async (auth) => {
 
     // convert homework from formula to items
     const assignHomework = (studentSubmissions) => assignments.map((item, index) => {
+      if (!studentSubmissions) {
+        console.log(studentSubmissions, index, item)
+      }
       return {
         completion: studentSubmissions[index],
         link: item.hyperlink,
