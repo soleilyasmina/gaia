@@ -4,6 +4,7 @@ const { prompt, Separator } = require("inquirer");
 const feedback = require("./feedback");
 const ghost = require("./ghost");
 const mailer = require("./mailer");
+const progress = require("./progress");
 const projects = require("./projects");
 const setup = require("./setup");
 const wiki = require("./wiki");
@@ -31,6 +32,7 @@ const main = async () => {
             new Separator(),
             "projects",
             "feedback",
+            "progress",
             new Separator(),
             "setup",
             "update",
@@ -77,6 +79,9 @@ const main = async () => {
           break;
         case "feedback":
           await feedback(auth, test);
+          break;
+        case "progress":
+          await progress(auth, students);
           break;
         case "wiki":
           await wiki(auth);
