@@ -61,14 +61,18 @@ const provideStudentsCallback = async (auth) => {
 
     // convert homework from formula to items
     const assignHomework = (studentSubmissions) => assignments.map((item, index) => {
-      if (!studentSubmissions) {
-        console.log(studentSubmissions, index, item)
+      try {
+        if (!studentSubmissions) {
+          throw new Error;
+        }
+        return {
+          completion: studentSubmissions[index],
+          link: item.hyperlink,
+          name: item.formattedValue,
+        };
+      } catch (e) {
+        return {};
       }
-      return {
-        completion: studentSubmissions[index],
-        link: item.hyperlink,
-        name: item.formattedValue,
-      };
     });
 
     // preparing the final output

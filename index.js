@@ -1,22 +1,26 @@
 /* eslint-disable no-console */
-const fs = require('fs');
+const fs = require("fs");
 const { prompt, Separator } = require("inquirer");
 const feedback = require("./feedback");
 const ghost = require("./ghost");
 const mailer = require("./mailer");
 const progress = require("./progress");
 const projects = require("./projects");
+const puppetmaster = require("./puppetmaster");
 const setup = require("./setup");
 const wiki = require("./wiki");
 const manual = require("./setup/manual");
 const update = require("./setup/update");
 const { filterEnrolled } = require("./helpers");
 const provideStudents = require("./setup/students");
-const { getNewToken } = require('./setup/auth');
+const { getNewToken } = require("./setup/auth");
 
 const main = async () => {
   try {
-    if (!fs.existsSync(__dirname + "/config.json") || !fs.existsSync(__dirname + "/setup/token.json")) {
+    if (
+      !fs.existsSync(__dirname + "/config.json") ||
+      !fs.existsSync(__dirname + "/setup/token.json")
+    ) {
       setup();
     } else {
       const { auth, students } = await provideStudents();
@@ -33,6 +37,7 @@ const main = async () => {
             "projects",
             "feedback",
             "progress",
+            "puppetmaster",
             new Separator(),
             "setup",
             "update",
@@ -79,6 +84,9 @@ const main = async () => {
           break;
         case "feedback":
           await feedback(auth, test);
+          break;
+        case "puppetmaster":
+          await puppetmaster(auth);
           break;
         case "progress":
           await progress(auth, students);
