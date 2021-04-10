@@ -24,7 +24,7 @@ const setup = () => {
           type: "input",
           name: "name",
           message:
-            "Please enter your first name (how you will sign in e-mails):",
+          "Please enter your first name (how you will sign in e-mails):",
           when: () => !config.config.name,
         },
         {
@@ -61,7 +61,7 @@ const setup = () => {
           type: "input",
           name: "cohort",
           message:
-            "Please enter the name of your cohort on Github (e.g. sei-nyc-bees).",
+          "Please enter the name of your cohort on Github (e.g. sei-nyc-bees).",
           when: () => !config.config.cohort,
         },
         {
@@ -69,18 +69,18 @@ const setup = () => {
           name: "courseTracker",
           message: "Please enter your current Course Tracker spreadsheet id.",
           when: ({ cohort }) =>
-            cohort &&
-            (!config.cohorts[cohort] || !config.cohorts[cohort].courseTracker),
+          cohort &&
+          (!config.cohorts[cohort] || !config.cohorts[cohort].courseTracker),
         },
         {
           type: "input",
           name: "curriculumRoadmap",
           message:
-            "Please enter your current Curriculum roadmap's spreadsheet id.",
+          "Please enter your current Curriculum Roadmap's spreadsheet id.",
           when: ({ cohort }) =>
-            cohort &&
-            (!config.cohorts[cohort] ||
-              !config.cohorts[cohort].curriculumRoadmap),
+          cohort &&
+          (!config.cohorts[cohort] ||
+            !config.cohorts[cohort].curriculumRoadmap),
         },
       ])
       .then((answers) => {
@@ -94,14 +94,16 @@ const setup = () => {
             name: config.config.name || answers.name,
             pronouns: config.config.pronouns || answers.pronouns,
           },
-          cohorts: {
+        };
+        if (answers.cohort) {
+          newConfig.cohorts = {
             ...config.cohorts,
             [answers.cohort]: {
               courseTracker: answers.courseTracker,
               curriculumRoadmap: answers.curriculumRoadmap,
             },
-          },
-        };
+          }
+        }
         fs.writeFileSync(configPath, JSON.stringify(newConfig, null, 2));
         console.log(
           `${chalk.bold.green("config.json")} written at ${chalk.bold.green(

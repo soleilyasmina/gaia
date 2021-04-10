@@ -9,6 +9,7 @@ config.json
 random/weight.json
 git-over-here/homework/*/
 wiki/*.md
+puppetmaster/*.md
 
 # Dependencies
 node_modules/

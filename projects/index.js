@@ -84,6 +84,8 @@ const copyTemplate = async (sheets, destinationSpreadsheetId) => {
 
 const createGists = async (students) => {
   const feedback = fs.readFileSync(__dirname + "/default.md", "utf8");
+  const configPath = path.resolve(__dirname, "../config.json");
+  const config = JSON.parse(fs.readFileSync(configPath));
   return Promise.all(
     students.map(async (stu) => {
       try {
@@ -101,7 +103,7 @@ const createGists = async (students) => {
           },
           {
             headers: {
-              Authorization: `token ${process.env.TOKEN}`,
+              Authorization: `token ${config.config.token}`,
             },
           }
         );
