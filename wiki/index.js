@@ -5,10 +5,7 @@ const { prompt } = require("inquirer");
 const path = require("path");
 const table = require("markdown-table");
 
-const inquire = async () => {
-  const config = JSON.parse(
-    fs.readFileSync(path.resolve(__dirname, "../config.json"))
-  );
+const inquire = async (config) => {
   return prompt([
     {
       message: "What unit do you want to make this wiki for?",
@@ -22,20 +19,14 @@ const inquire = async () => {
       name: "cohort",
       default: config.config.cohort,
     },
-    {
-      message: `Please enter the curriculum roadmap spreadsheet id, or press enter for your current cohort!`,
-      type: "input",
-      name: "spreadsheetId",
-      default: config.cohorts[config.config.cohort].curriculumRoadmap,
-    },
   ]);
 };
 
-const buildLessons = async (auth, { unit, spreadsheetId }) => {
+const buildLessons = async (auth, { unit, cohort }, config) => {
   try {
     const sheets = google.sheets({ version: "v4", auth });
     const lessonsData = await sheets.spreadsheets.get({
-      spreadsheetId,
+      spreadsheetId: config.cohorts[cohort].curriculumRoadmap,
       ranges: [`${unit}!A1:K200`],
       includeGridData: true,
     });
@@ -102,8 +93,11 @@ const buildDays = (lessons) => {
 
 const createWiki = async (auth) => {
   const sheets = google.sheets({ version: "v4", auth });
-  const results = await inquire();
-  const lessons = await buildLessons(auth, results);
+  const config = JSON.parse(
+    fs.readFileSync(path.resolve(__dirname, "../config.json"))
+  );
+  const results = await inquire(config);
+  const lessons = await buildLessons(auth, results, config);
   const days = buildDays(lessons);
   const wikiFilename = `./wiki/${results.cohort}-${results.unit
     .replace(/\ /g, "-")
