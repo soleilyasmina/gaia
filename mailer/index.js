@@ -41,15 +41,13 @@ const mailer = async (students, test) => {
 
         const selected = await prompt({
           message: "Choose students to mail:\n(All students are selected by default.)\n",
-          name: "indexesToMail",
+          name: "studentsToMail",
           type: "checkbox",
           loop: false,
-          choices: enrolledStudents.map((student, i) => ({name: student.name, value: i, checked: true}) )
+          choices: enrolledStudents.map((student, i) => ({name: student.name, value: student, checked: true}) )
         })
 
-        const studentsToMail = enrolledStudents.filter((student, i) => selected.indexesToMail.includes(i))
-
-        await studentsToMail.forEach(async (student) => {
+        await selected.studentsToMail.forEach(async (student) => {
           await transporter.sendMail({
             from: config.config.emailUser,
             to: student.email,
