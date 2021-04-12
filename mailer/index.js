@@ -3,6 +3,7 @@ const nodemailer = require("nodemailer");
 
 const fs = require("fs");
 const path = require("path");
+const { prompt } = require("inquirer");
 
 const { filterEnrolled } = require("../helpers");
 const template = require("./template");
@@ -37,7 +38,18 @@ const mailer = async (students, test) => {
         );
         transporter.close();
       } else {
-        await enrolledStudents.forEach(async (student) => {
+
+        const selected = await prompt({
+          message: "Choose students to mail:\n(All students are selected by default.)\n",
+          name: "indexesToMail",
+          type: "checkbox",
+          loop: false,
+          choices: enrolledStudents.map((student, i) => ({name: student.name, value: i, checked: true}) )
+        })
+
+        const studentsToMail = enrolledStudents.filter((student, i) => selected.indexesToMail.includes(i))
+
+        await studentsToMail.forEach(async (student) => {
           await transporter.sendMail({
             from: config.config.emailUser,
             to: student.email,
