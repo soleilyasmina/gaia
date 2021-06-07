@@ -86,7 +86,7 @@ const buildStudents = async (auth, unit, config) => {
 };
 
 const deliverFeedback = async (auth, test) => {
-  const configPath = path.resolve(__dirname, "../config.json");
+  const configPath = path.resolve(__dirname, "../../config/config.json");
   const config = JSON.parse(fs.readFileSync(configPath));
   const results = await inquirer.prompt([
     {

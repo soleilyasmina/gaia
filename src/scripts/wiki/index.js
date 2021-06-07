@@ -94,7 +94,7 @@ const buildDays = (lessons) => {
 const createWiki = async (auth) => {
   const sheets = google.sheets({ version: "v4", auth });
   const config = JSON.parse(
-    fs.readFileSync(path.resolve(__dirname, "../config.json"))
+    fs.readFileSync(path.resolve(__dirname, "../../config/config.json"))
   );
   const results = await inquire(config);
   const lessons = await buildLessons(auth, results, config);

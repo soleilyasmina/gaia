@@ -1,18 +1,18 @@
 # Credentials
-*/credentials.json
-*/token.json
+src/config/credentials.json
+src/config/config.json
+src/config/token.json
 auth.txt
 .env*
-config.json
 
 # Local Files
-random/weight.json
-git-over-here/homework/*/
-wiki/*.md
-puppetmaster/*.md
+src/scripts/git-over-here/homework/*/
+src/scripts/wiki/*.md
+src/scripts/puppetmaster/*.md
+*/.DS_Store
 
 # Dependencies
 node_modules/
 yarn.lock
-git-over-here/Brewfile.lock.json
+./src/scripts/git-over-here/Brewfile.lock.json
 

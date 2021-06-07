@@ -4,12 +4,13 @@ const fs = require("fs");
 const inquirer = require("inquirer");
 const path = require("path");
 
-const { filterEnrolled } = require("../helpers");
+const { filterEnrolled } = require("../../services/helpers");
+const provideStudents = require("../../services/students");
 // populate first / last name columns, emails from enrolled students (google-auth)
 // create gists for individual with template (inside this folder?) (axios)
 
 const createProject = async (sheets) => {
-  const configPath = path.resolve(__dirname, "../config.json");
+  const configPath = path.resolve(__dirname, "../../config/config.json");
   const config = JSON.parse(fs.readFileSync(configPath));
   const results = await inquirer.prompt([
     {
@@ -84,7 +85,7 @@ const copyTemplate = async (sheets, destinationSpreadsheetId) => {
 
 const createGists = async (students) => {
   const feedback = fs.readFileSync(__dirname + "/default.md", "utf8");
-  const configPath = path.resolve(__dirname, "../config.json");
+  const configPath = path.resolve(__dirname, "../../config/config.json");
   const config = JSON.parse(fs.readFileSync(configPath));
   return Promise.all(
     students.map(async (stu) => {
@@ -144,9 +145,10 @@ const populateTracker = async (sheets, students, spreadsheetId) => {
   });
 };
 
-const createTracker = async (auth, students) => {
+const createTracker = async (auth) => {
   const sheets = google.sheets({ version: "v4", auth });
   const spreadsheetId = await createProject(sheets);
+  const students = await provideStudents(auth);
   await copyTemplate(sheets, spreadsheetId);
   await populateTracker(sheets, students, spreadsheetId);
 };

@@ -1,5 +1,5 @@
-TOKEN=$(cat ../config.json | jq --raw-output '.config.token')
-COHORT=$(cat ../config.json | jq --raw-output '.config.cohort')
+TOKEN=$(cat ../../config/config.json | jq --raw-output '.config.token')
+COHORT=$(cat ../../config/config.json | jq --raw-output '.config.cohort')
 . style.sh
 
 function main() {

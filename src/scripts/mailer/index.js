@@ -5,14 +5,14 @@ const fs = require("fs");
 const path = require("path");
 const { prompt } = require("inquirer");
 
-const { filterEnrolled } = require("../helpers");
+const { filterEnrolled } = require("../../services/helpers");
 const template = require("./template");
 
 require("dotenv").config();
 
 const mailer = async (students, test) => {
   try {
-    const configPath = path.resolve(__dirname, "../config.json");
+    const configPath = path.resolve(__dirname, "../../config/config.json");
     const config = JSON.parse(fs.readFileSync(configPath));
     let sent = 0;
     const transporter = nodemailer.createTransport({

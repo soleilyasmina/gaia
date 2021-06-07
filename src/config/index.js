@@ -2,7 +2,7 @@ const chalk = require("chalk");
 const fs = require("fs");
 const inquirer = require("inquirer");
 const path = require("path");
-const { getNewToken } = require("./auth");
+const { getNewToken } = require("../services/auth");
 
 require("dotenv").config();
 

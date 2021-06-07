@@ -9,10 +9,10 @@ require("dotenv").config();
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
 
 // where the token is saved
-const TOKEN_PATH = __dirname + "/token.json";
+const TOKEN_PATH = __dirname + "/../config/token.json";
 
 const generateOAuthClient = () => {
-  const credentials = JSON.parse(fs.readFileSync(__dirname + '/credentials.json'));
+  const credentials = JSON.parse(fs.readFileSync(__dirname + '/../config/credentials.json'));
   const {
     client_id: clientId,
     client_secret: clientSecret,
@@ -57,11 +57,11 @@ const getNewToken = () => {
 };
 
 // to authorize and grab secret
-const authorize = async (callback) => {
+const authorize = async (callback, ...args) => {
   const oAuth2Client = generateOAuthClient();
   const token = fs.readFileSync(TOKEN_PATH);
   oAuth2Client.setCredentials(JSON.parse(token));
-  return callback(oAuth2Client);
+  return callback(oAuth2Client, ...args);
 };
 
 module.exports = {
