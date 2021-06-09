@@ -9,6 +9,7 @@ const mailer = require("./scripts/mailer");
 const progress = require("./scripts/progress");
 const projects = require("./scripts/projects");
 const puppetmaster = require("./scripts/puppetmaster");
+const scribe = require("./scripts/scribe");
 const update = require("./scripts/update");
 const wiki = require("./scripts/wiki");
 const { filterEnrolled } = require("./services/helpers");
@@ -32,6 +33,7 @@ const main = async () => {
             "ghost",
             "mailedit",
             "wiki",
+            "scribe",
             new Separator(),
             "projects",
             "feedback",
@@ -90,6 +92,9 @@ const main = async () => {
           break;
         case "progress":
           await authorize(progress);
+          break;
+        case "scribe":
+          await authorize(scribe);
           break;
         case "wiki":
           await authorize(wiki);

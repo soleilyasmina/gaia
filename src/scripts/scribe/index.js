@@ -3,7 +3,6 @@ const fs = require("fs");
 const chalk = require("chalk");
 const { prompt } = require("inquirer");
 const path = require("path");
-const table = require("markdown-table");
 
 const inquire = async (config) => {
   return prompt([
@@ -94,7 +93,13 @@ const createTable = (realDays) => {
   ]);
 };
 
-const createWiki = async (auth) => {
+const isolateHomeworks = (days) => {
+  return days.filter((day) =>
+    day.some(({ type }) => ["EE", "EA", "ECS"].includes(type))
+  );
+};
+
+const createMessage = async (auth) => {
   const sheets = google.sheets({ version: "v4", auth });
   const config = JSON.parse(
     fs.readFileSync(path.resolve(__dirname, "../../config/config.json"))
@@ -102,17 +107,31 @@ const createWiki = async (auth) => {
   const results = await inquire(config);
   const lessons = await buildLessons(auth, results, config);
   const realDays = buildDays(lessons);
-  console.log(realDays.length);
-  const days = createTable(realDays);
-  const wikiFilename = `./src/scripts/wiki/${results.cohort}-${results.unit
-    .replace(/\ /g, "-")
-    .toLowerCase()}-wiki.md`;
-  fs.writeFileSync(wikiFilename, days);
-  console.log(
-    `${chalk.bold.green(results.unit)} Wiki written for ${chalk.bold.green(
-      results.cohort
-    )} at ${chalk.bold.green(wikiFilename)}!`
+  const homeworkDays = isolateHomeworks(realDays);
+  const { day } = await prompt([
+    {
+      message: "Which day's homework would you like?",
+      type: "list",
+      name: "day",
+      choices: () => {
+        return homeworkDays.map((day) => ({
+          name: day
+            .map((day) => day.date)
+            .filter((date) => !!date)
+            .join(", "),
+          value: day,
+        }));
+      },
+    },
+  ]);
+  const homework = day.filter((line) =>
+    ["EE", "EA", "ECS"].includes(line.type)
   );
+  homework.forEach((hw) => {
+    console.log(
+      `${chalk.bold.green(hw.type)}: ${chalk.bold.green(hw.name)} (${chalk.bold.blue(hw.link)})!`
+    );
+  });
 };
 
-module.exports = createWiki;
+module.exports = createMessage;
