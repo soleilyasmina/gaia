@@ -4,25 +4,9 @@ const chalk = require("chalk");
 const { prompt } = require("inquirer");
 const path = require("path");
 
-const inquire = async (config) => {
-  return prompt([
-    {
-      message: "What unit do you want to make this wiki for?",
-      type: "list",
-      choices: ["Unit 1", "Unit 2", "Unit 3", "Unit 4"],
-      name: "unit",
-    },
-    {
-      message: `Please enter the name of your cohort, or press enter for your current cohort!`,
-      type: "input",
-      name: "cohort",
-      default: config.config.cohort,
-    },
-  ]);
-};
-
-const buildLessons = async (auth, { unit, cohort }, config) => {
+const buildLessons = async (auth, unit, config) => {
   try {
+    const { cohort } = config.config;
     const sheets = google.sheets({ version: "v4", auth });
     const lessonsData = await sheets.spreadsheets.get({
       spreadsheetId: config.cohorts[cohort].curriculumRoadmap,
@@ -74,25 +58,6 @@ const buildDays = (lessons) => {
   return realDays;
 };
 
-const createTable = (realDays) => {
-  return table([
-    ["Date", "Type", "Repo", "Solution", "Recording"],
-    ...realDays
-      .flat()
-      .map((line) => [
-        line.date,
-        line.type,
-        line.link ? `[${line.name}](${line.link})` : line.name ? line.name : "",
-        line.solutionLink
-          ? `[${line.solution}](${line.solutionLink})`
-          : line.solution
-          ? `[${line.solution}](${line.link}/tree/solution)`
-          : "",
-        line.zoom,
-      ]),
-  ]);
-};
-
 const isolateHomeworks = (days) => {
   return days.filter((day) =>
     day.some(({ type }) => ["EE", "EA", "ECS"].includes(type))
@@ -104,8 +69,15 @@ const createMessage = async (auth) => {
   const config = JSON.parse(
     fs.readFileSync(path.resolve(__dirname, "../../config/config.json"))
   );
-  const results = await inquire(config);
-  const lessons = await buildLessons(auth, results, config);
+  const { unit } = await prompt([
+    {
+      message: "What unit do you want to make this wiki for?",
+      type: "list",
+      choices: ["Unit 1", "Unit 2", "Unit 3", "Unit 4"],
+      name: "unit",
+    }
+  ]);
+  const lessons = await buildLessons(auth, unit, config);
   const realDays = buildDays(lessons);
   const homeworkDays = isolateHomeworks(realDays);
   const { day } = await prompt([

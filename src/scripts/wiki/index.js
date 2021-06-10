@@ -12,18 +12,13 @@ const inquire = async (config) => {
       type: "list",
       choices: ["Unit 1", "Unit 2", "Unit 3", "Unit 4"],
       name: "unit",
-    },
-    {
-      message: `Please enter the name of your cohort, or press enter for your current cohort!`,
-      type: "input",
-      name: "cohort",
-      default: config.config.cohort,
-    },
+    }
   ]);
 };
 
-const buildLessons = async (auth, { unit, cohort }, config) => {
+const buildLessons = async (auth, unit, config) => {
   try {
+    const { cohort } = config.config;
     const sheets = google.sheets({ version: "v4", auth });
     const lessonsData = await sheets.spreadsheets.get({
       spreadsheetId: config.cohorts[cohort].curriculumRoadmap,
@@ -99,18 +94,17 @@ const createWiki = async (auth) => {
   const config = JSON.parse(
     fs.readFileSync(path.resolve(__dirname, "../../config/config.json"))
   );
-  const results = await inquire(config);
-  const lessons = await buildLessons(auth, results, config);
+  const { unit } = await inquire(config);
+  const lessons = await buildLessons(auth, unit, config);
   const realDays = buildDays(lessons);
-  console.log(realDays.length);
   const days = createTable(realDays);
-  const wikiFilename = `./src/scripts/wiki/${results.cohort}-${results.unit
+  const wikiFilename = `./src/scripts/wiki/${config.config.cohort}-${unit
     .replace(/\ /g, "-")
     .toLowerCase()}-wiki.md`;
   fs.writeFileSync(wikiFilename, days);
   console.log(
-    `${chalk.bold.green(results.unit)} Wiki written for ${chalk.bold.green(
-      results.cohort
+    `${chalk.bold.green(unit)} Wiki written for ${chalk.bold.green(
+      config.config.cohort
     )} at ${chalk.bold.green(wikiFilename)}!`
   );
 };
