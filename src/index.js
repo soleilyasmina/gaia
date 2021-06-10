@@ -10,6 +10,7 @@ const progress = require("./scripts/progress");
 const projects = require("./scripts/projects");
 const puppetmaster = require("./scripts/puppetmaster");
 const scribe = require("./scripts/scribe");
+const status = require("./scripts/status");
 const update = require("./scripts/update");
 const wiki = require("./scripts/wiki");
 const { filterEnrolled } = require("./services/helpers");
@@ -66,8 +67,7 @@ const main = async () => {
           setup();
           break;
         case "status":
-          const students = await authorize(provideStudents);
-          console.table(filterEnrolled(students));
+          await authorize(status);
           break;
         case "update":
           update();

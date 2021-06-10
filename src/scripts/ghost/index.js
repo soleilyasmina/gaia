@@ -5,8 +5,6 @@ const fs = require("fs");
 const path = require("path");
 const provideStudents = require('../../services/students');
 
-require('dotenv').config();
-
 const BASE_URL = 'https://git.generalassemb.ly';
 
 const toColumn = num => {
