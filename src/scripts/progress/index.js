@@ -1,5 +1,6 @@
 const { google } = require("googleapis");
 const axios = require("axios");
+const chalk = require("chalk");
 const fs = require("fs");
 const inquirer = require("inquirer");
 const path = require("path");
@@ -77,6 +78,7 @@ const createTracker = async (auth) => {
   const students = await provideStudents(auth);
   await copyTemplate(sheets, spreadsheetId);
   await populateTracker(sheets, students, spreadsheetId, config);
+  console.log(chalk.bold.green(`Report generated for ${config.config.cohort}!`))
 };
 
 module.exports = createTracker;

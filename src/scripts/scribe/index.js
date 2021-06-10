@@ -101,7 +101,7 @@ const createMessage = async (auth) => {
   );
   homework.forEach((hw) => {
     console.log(
-      `${chalk.bold.green(hw.type)}: ${chalk.bold.green(hw.name)} (${chalk.bold.blue(hw.link)})!`
+      `${chalk.bold.green(hw.type)}: ${chalk.green(hw.name)} (${chalk.blue(hw.link)})!`
     );
   });
 };
