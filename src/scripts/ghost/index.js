@@ -29,7 +29,7 @@ const parsePullRequestJSON = async (link, config) => {
   const [organization, repository] = link
     .replace(`${BASE_URL}/`, '')
     .split('/');
-  const convertedLink = `${BASE_URL}/api/v3/repos/${organization}/${repository}/pulls?state=all`;
+  const convertedLink = `${BASE_URL}/api/v3/repos/${organization}/${repository}/pulls?state=all&per_page=100`;
   try {
     const resp = await axios.get(convertedLink, {
       headers: {

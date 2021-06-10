@@ -125,9 +125,9 @@ do
     printf "$GREEN"
     echo "Repository found for $REPO!"
     printf "$RESET"
-    OPENPRS="$(curl https://git.generalassemb.ly/api/v3/repos/$COHORT/$REPO/pulls\?state\=all -H "Authorization: token $TOKEN" --silent | jq '.[] | .state' | grep "open" | wc -l | awk '$1=$1')"
+    OPENPRS="$(curl https://git.generalassemb.ly/api/v3/repos/$COHORT/$REPO/pulls\?state\=all\&per_page\=100 -H "Authorization: token $TOKEN" --silent | jq '.[] | .state' | grep "open" | wc -l | awk '$1=$1')"
     echo "You have $OPENPRS submissions, cloning into$BLUE $REPO$RESET."
-    curl "https://git.generalassemb.ly/api/v3/repos/$COHORT/$REPO/pulls?state=all" -H "Authorization: token $TOKEN" 2>/dev/null |\
+    curl "https://git.generalassemb.ly/api/v3/repos/$COHORT/$REPO/pulls?state=all&per_page=100" -H "Authorization: token $TOKEN" 2>/dev/null |\
       jq '.[] | @uri "\(.user.login) \(.head.ref) \(.state)"' |\
       xargs -L 4 -I {} bash -c "main $REPO {}"
     cd ../..
