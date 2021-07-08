@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const fs = require("fs");
 const { prompt, Separator } = require("inquirer");
-const setup = require("./config");
+const config = require("./config");
 const manual = require("./config/manual");
 const feedback = require("./scripts/feedback");
 const ghost = require("./scripts/ghost");
@@ -20,10 +20,11 @@ const provideStudents = require("./services/students");
 const main = async () => {
   try {
     if (
+      !fs.existsSync(__dirname + "/config/credentials.json") ||
       !fs.existsSync(__dirname + "/config/config.json") ||
       !fs.existsSync(__dirname + "/config/token.json")
     ) {
-      setup();
+      config();
     } else {
       const { choice } = await prompt([
         {
@@ -41,7 +42,7 @@ const main = async () => {
             "progress",
             "puppetmaster",
             new Separator(),
-            "setup",
+            "config",
             "update",
             "help",
             "status",
@@ -63,8 +64,8 @@ const main = async () => {
         ).test;
       }
       switch (choice) {
-        case "setup":
-          setup();
+        case "config":
+          config();
           break;
         case "status":
           await authorize(status);
