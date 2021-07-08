@@ -44,7 +44,7 @@ const provideStudents = async (auth) => {
     });
     const attendancesData = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: `Attendance!E11:E${11 + totalStudents - 1}`,
+      range: `Attendance!E12:E${11 + totalStudents - 1}`,
     });
 
     const students = studentsData.data.values;
