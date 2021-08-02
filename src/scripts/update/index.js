@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const update = () => {
   try {
-    fs.readFileSync(__dirname + "../../config/credentials.json");
+    fs.readFileSync(path.resolve(__dirname, "../../config/credentials.json"));
     console.log("Credentials found!");
     const configPath = path.resolve(__dirname, "../../config/config.json");
     if (!fs.existsSync(configPath)) {

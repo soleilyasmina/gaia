@@ -81,7 +81,7 @@ const provideStudents = async (auth) => {
           name: `${item[0]} ${item[1]}`,
           firstName: item[0],
           lastName: item[1],
-          username: githubs[index][0],
+          username: githubs && githubs[index] ? githubs[index][0] : null,
           email: item[2],
           percentage: item[3],
           absences: attendances[index][0],
