@@ -35,7 +35,8 @@ const buildLessons = async (auth, units, config) => {
               val[1] !== "" &&
               val[6].hyperlink &&
               val[7].hyperlink &&
-              val[7].hyperlink.includes("https://git.generalassemb.ly")
+              val[7].hyperlink.includes("https://git.generalassemb.ly") &&
+              !val[7].hyperlink.includes(cohort)
           )
           .map((line) => ({
             date: line[0].formattedValue,
