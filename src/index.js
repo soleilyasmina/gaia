@@ -3,6 +3,7 @@ const fs = require("fs");
 const { prompt, Separator } = require("inquirer");
 const config = require("./config");
 const manual = require("./config/manual");
+const exchange = require("./scripts/exchange");
 const feedback = require("./scripts/feedback");
 const ghost = require("./scripts/ghost");
 const mailer = require("./scripts/mailer");
@@ -42,6 +43,8 @@ const main = async () => {
             "progress",
             "puppetmaster",
             new Separator(),
+            "exchange",
+            new Separator(),
             "config",
             "update",
             "help",
@@ -75,6 +78,9 @@ const main = async () => {
           break;
         case "help":
           manual();
+          break;
+        case "exchange":
+          await authorize(exchange);
           break;
         case "ghost":
           await authorize(ghost, test);
