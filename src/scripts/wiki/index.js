@@ -12,7 +12,14 @@ const inquire = async (config) => {
       type: "list",
       choices: ["Unit 1", "Unit 2", "Unit 3", "Unit 4"],
       name: "unit",
-    }
+    },
+    {
+      message:
+        "Would you like to show all repos to students, or limit today's?",
+      type: "confirm",
+      name: "show",
+      default: true,
+    },
   ]);
 };
 
@@ -70,22 +77,38 @@ const buildDays = (lessons) => {
   return realDays;
 };
 
-const createTable = (realDays) => {
+const createTable = (realDays, show) => {
   return table([
     ["Date", "Type", "Repo", "Solution", "Recording"],
-    ...realDays
-      .flat()
-      .map((line) => [
-        line.date,
-        line.type,
-        line.link ? `[${line.name}](${line.link})` : line.name ? line.name : "",
-        line.solutionLink
-          ? `[${line.solution}](${line.solutionLink})`
-          : line.solution
-          ? `[${line.solution}](${line.link}/tree/solution)`
-          : "",
-        line.zoom,
-      ]),
+    ...realDays.flat().reduce(
+      (acc, line) => {
+        if (!show) {
+          if (acc.canReveal && line.date && line.date.includes("/")) {
+            const lessonDate = new Date(line.date);
+            if (lessonDate.getTime() > new Date("8/21/2021").getTime()) {
+              acc.canReveal = false;
+            }
+          }
+        }
+        acc.lines.push([
+          line.date,
+          line.type,
+          line.link && acc.canReveal
+            ? `[${line.name}](${line.link})`
+            : line.name
+            ? line.name
+            : "",
+          line.solutionLink && acc.canReveal
+            ? `[${line.solution}](${line.solutionLink})`
+            : line.solution && acc.canReveal
+            ? `[${line.solution}](${line.link}/tree/solution)`
+            : "",
+          line.zoom,
+        ]);
+        return acc;
+      },
+      { lines: [], canReveal: true }
+    ).lines,
   ]);
 };
 
@@ -94,13 +117,13 @@ const createWiki = async (auth) => {
   const config = JSON.parse(
     fs.readFileSync(path.resolve(__dirname, "../../config/config.json"))
   );
-  const { unit } = await inquire(config);
+  const { show, unit } = await inquire(config);
   const lessons = await buildLessons(auth, unit, config);
   const realDays = buildDays(lessons);
-  const days = createTable(realDays);
-  const wikiFilename = `./src/scripts/wiki/${config.config.cohort}-${unit
-    .replace(/\ /g, "-")
-    .toLowerCase()}-wiki.md`;
+  const days = createTable(realDays, show);
+  const wikiFilename = `./src/scripts/wiki/${
+    config.config.cohort
+  }-${unit.replace(/\ /g, "-").toLowerCase()}-wiki.md`;
   fs.writeFileSync(wikiFilename, days);
   console.log(
     `${chalk.bold.green(unit)} Wiki written for ${chalk.bold.green(

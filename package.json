@@ -10,7 +10,7 @@
     "lunch": "cd $(git rev-parse --show-toplevel) && cd src/scripts/git-over-here/ && ./main.sh --lunch"
   },
   "keywords": [],
-  "author": "Soleil Solomon, Andre Pato, Jordan Cruz-Correa, Zulay Scottborgh, Shay Kelley, Jeremy Rose, Tran Luong",
+  "author": "Soleil Solomon, Andre Pato, Jordan Cruz-Correa, Zulay Scottborgh, Shay Kelley, Jeremy Rose, Tran Luong, Zoe Peterson",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.0",
