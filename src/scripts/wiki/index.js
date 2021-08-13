@@ -85,7 +85,7 @@ const createTable = (realDays, show) => {
         if (!show) {
           if (acc.canReveal && line.date && line.date.includes("/")) {
             const lessonDate = new Date(line.date);
-            if (lessonDate.getTime() > new Date("8/21/2021").getTime()) {
+            if (lessonDate.getTime() > new Date().getTime()) {
               acc.canReveal = false;
             }
           }
