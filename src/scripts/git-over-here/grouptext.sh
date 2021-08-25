@@ -38,4 +38,4 @@ case $LANGUAGE in
     ;;
 esac
 
-ls | xargs -I {} bash -c "cd {} && $TESTFRAMEWORK && cd .."
+ls | xargs -I {} bash -c "cd {} && echo Now running tests for {}. && $TESTFRAMEWORK && cd .."
