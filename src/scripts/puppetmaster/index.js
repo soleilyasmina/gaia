@@ -52,12 +52,12 @@ const fillForm = async (student, browser) => {
 
 const puppetmaster = async (auth) => {
   const browser = await puppeteer.launch();
-  const configPath = path.resolve(__dirname, "../config.json");
+  const configPath = path.resolve(__dirname, "../../config/config.json");
   const config = JSON.parse(fs.readFileSync(configPath));
   const students = await buildStudents(auth, config);
   //await Promise.all(students.map(async (student) => await fillForm(student, browser)));
   const urls = students.map(createURL).join('\n');
-  const newFilename = `./puppetmaster/${config.config.cohort}-progress.md`;
+  const newFilename = path.resolve(__dirname, `${config.config.cohort}-progress.md`);
   fs.writeFileSync(newFilename, urls);
   console.log(
     `Progress report written for ${chalk.bold.green(
