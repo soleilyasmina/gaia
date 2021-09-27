@@ -71,7 +71,7 @@ const createMessage = async (auth) => {
   );
   const { unit } = await prompt([
     {
-      message: "What unit do you want to make this wiki for?",
+      message: "What unit do you want to make this homework message for?",
       type: "list",
       choices: ["Unit 1", "Unit 2", "Unit 3", "Unit 4"],
       name: "unit",
