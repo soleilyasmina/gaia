@@ -8,7 +8,8 @@
     "setup": "npm install && cd git-over-here && brew bundle install && cd ..",
     "goh": "cd $(git rev-parse --show-toplevel) && cd src/scripts/git-over-here/ && ./main.sh",
     "gosh": "cd $(git rev-parse --show-toplevel) && cd src/scripts/git-over-here/ && ./main.sh --ssh",
-    "lunch": "cd $(git rev-parse --show-toplevel) && cd src/scripts/git-over-here/ && ./main.sh --lunch"
+    "lunch": "cd $(git rev-parse --show-toplevel) && cd src/scripts/git-over-here/ && ./main.sh --lunch",
+    "lunches":"cd $(git rev-parse --show-toplevel) && cd src/scripts/git-over-here/ && ./main.sh --lunch --ssh"
   },
   "keywords": [],
   "author": "Soleil Solomon, Andre Pato, Jordan Cruz-Correa, Zulay Scottborgh, Shay Kelley, Jeremy Rose, Tran Luong, Zoe Peterson",
