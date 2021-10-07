@@ -1,4 +1,3 @@
-const puppeteer = require("puppeteer");
 const { google } = require("googleapis");
 const chalk = require("chalk");
 const fs = require("fs");
@@ -40,18 +39,7 @@ const createURL = (student) => {
   return `https://docs.google.com/forms/d/1qCESl4k5-0uQgguegevhWVKGnfsOMM_DBt5FbigWTgA/viewform?entry.1484115108=${student.instance}&entry.1656736058=${encodeURIComponent(student.instructorEmail)}&entry.890964849=${encodeURIComponent(student.studentName)}&entry.1199003076=${encodeURIComponent(student.studentEmail)}&entry.1480674979=${encodeURIComponent(student.course)}&entry.134546973_year=${student.startDate.split('/')[2]}&entry.134546973_month=${student.startDate.split('/')[0]}&entry.134546973_day=${student.startDate.split('/')[1]}&entry.1047108904_year=${student.completionDate.split('/')[2]}&entry.1047108904_month=${student.completionDate.split('/')[0]}&entry.1047108904_day=${student.completionDate.split('/')[1]}&entry.250291501=${encodeURIComponent(student.material)}&entry.1759656636=${encodeURIComponent(student.notCovered)}&entry.342172517=${encodeURIComponent(student.absences)}&entry.1822047334=${encodeURIComponent(student.progress)}&entry.1162874525=${encodeURIComponent(student.comments)}&entry.898490519=${encodeURIComponent(student.signature)}&entry.1445306327_year=${student.date.split('/')[2]}&entry.1445306327_month=${student.date.split('/')[0]}&entry.1445306327_day=${student.date.split('/')[1]}`;
 }
 
-const fillForm = async (student, browser) => {
-  const page = await browser.newPage();
-  const url = createURL(student);
-  console.log(url);
-  await page.goto(url);
-  //await page.screenshot({
-  //path: `${student.studentName.split(" ")[0]}-screenshot.png`,
-  //});
-};
-
 const puppetmaster = async (auth) => {
-  const browser = await puppeteer.launch();
   const configPath = path.resolve(__dirname, "../../config/config.json");
   const config = JSON.parse(fs.readFileSync(configPath));
   const students = await buildStudents(auth, config);
@@ -64,7 +52,6 @@ const puppetmaster = async (auth) => {
       config.config.cohort
     )} at ${chalk.bold.green(newFilename)}!`
   );
-  await browser.close();
 };
 
 module.exports = puppetmaster;
