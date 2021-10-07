@@ -3,8 +3,7 @@ const axios = require('axios');
 const { google } = require('googleapis');
 const fs = require("fs");
 const path = require("path");
-
-require('dotenv').config();
+const provideStudents = require('../../services/students');
 
 const BASE_URL = 'https://git.generalassemb.ly';
 
@@ -30,7 +29,7 @@ const parsePullRequestJSON = async (link, config) => {
   const [organization, repository] = link
     .replace(`${BASE_URL}/`, '')
     .split('/');
-  const convertedLink = `${BASE_URL}/api/v3/repos/${organization}/${repository}/pulls?state=all`;
+  const convertedLink = `${BASE_URL}/api/v3/repos/${organization}/${repository}/pulls?state=all&per_page=100`;
   try {
     const resp = await axios.get(convertedLink, {
       headers: {
@@ -96,9 +95,10 @@ const createColumns = async (students, config) => {
   return definedColumns;
 };
 
-const ghost = async (auth, students, test) => {
-  const configPath = path.resolve(__dirname, "../config.json");
+const ghost = async (auth, test) => {
+  const configPath = path.resolve(__dirname, "../../config/config.json");
   const config = JSON.parse(fs.readFileSync(configPath));
+  const students = await provideStudents(auth);
   const columns = await createColumns(students, config);
   const sheets = google.sheets({ version: 'v4', auth });
   if (!test) {

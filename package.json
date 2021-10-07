@@ -1,14 +1,18 @@
 {
   "name": "homework-tracker",
-  "version": "4.0.1",
+  "version": "5.0.0",
   "description": "A series of tools for GA IAs and TAs.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "setup": "npm install && cd git-over-here && brew bundle install && cd .."
+    "setup": "npm install && cd git-over-here && brew bundle install && cd ..",
+    "goh": "cd $(git rev-parse --show-toplevel) && cd src/scripts/git-over-here/ && ./main.sh",
+    "gosh": "cd $(git rev-parse --show-toplevel) && cd src/scripts/git-over-here/ && ./main.sh --ssh",
+    "lunch": "cd $(git rev-parse --show-toplevel) && cd src/scripts/git-over-here/ && ./main.sh --lunch",
+    "lunches":"cd $(git rev-parse --show-toplevel) && cd src/scripts/git-over-here/ && ./main.sh --lunch --ssh"
   },
   "keywords": [],
-  "author": "Soleil Solomon, Andre Pato, Jordan Cruz-Correa, Zulay Scottborgh, Shay Kelley, Jeremy Rose",
+  "author": "Soleil Solomon, Andre Pato, Jordan Cruz-Correa, Zulay Scottborgh, Shay Kelley, Jeremy Rose, Tran Luong, Zoe Peterson",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.0",
@@ -18,8 +22,6 @@
     "googleapis": "^39.2.0",
     "inquirer": "^7.3.3",
     "markdown-table": "^2.0.0",
-    "nodemailer": "^6.3.0",
-    "puppeteer": "^8.0.0"
-  },
-  "devDependencies": {}
+    "nodemailer": "^6.3.0"
+  }
 }

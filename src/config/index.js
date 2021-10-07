@@ -2,15 +2,13 @@ const chalk = require("chalk");
 const fs = require("fs");
 const inquirer = require("inquirer");
 const path = require("path");
-const { getNewToken } = require("./auth");
-
-require("dotenv").config();
+const { getNewToken } = require("../services/auth");
 
 const setup = () => {
   try {
     fs.readFileSync(__dirname + "/credentials.json");
     console.log("Credentials found!");
-    const configPath = path.resolve(__dirname, "../config.json");
+    const configPath = path.resolve(__dirname, "./config.json");
     if (!fs.existsSync(configPath)) {
       fs.writeFileSync(
         configPath,
@@ -123,12 +121,12 @@ const setup = () => {
       });
   } catch (e) {
     console.log(
-      `No credentials found. Open this link with your General Assembly e-mail, and enable the Google Sheets API: ${chalk.blue.underline(
-        "https://developers.google.com/sheets/api/quickstart/nodejs"
+      `No credentials found. Open this link with your General Assembly e-mail, create a project called GAIA, and enable the Google Sheets API: ${chalk.blue.underline(
+        "https://console.cloud.google.com/"
       )}\n`
     );
     console.log(
-      "After doing this, create a Desktop app via the dialog and save the file in the resulting dialog as credentials.json in the setup folder (so the path should be setup/credentials.json).\n"
+      `After doing this, go to ${chalk.blue.underline("https://console.cloud.google.com/apis/api/sheets.googleapis.com/overview")} and create credentials for user data. On the OAuth Consent Screen menu, set the app name to "GAIA" and add your e-mail as the e-mail. On the Scopes menu, add the following scope: ${chalk.blue.underline("https://www.googleapis.com/auth/spreadsheets")}. On the OAuth Client ID menu, create a Desktop app and name it "GAIA". Save the file in the resulting Your Credentials menu as credentials.json in the config folder (so the path should be src/config/credentials.json).\n`
     );
   }
 };

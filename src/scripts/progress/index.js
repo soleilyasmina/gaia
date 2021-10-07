@@ -1,10 +1,12 @@
 const { google } = require("googleapis");
 const axios = require("axios");
+const chalk = require("chalk");
 const fs = require("fs");
 const inquirer = require("inquirer");
 const path = require("path");
 
-const { filterEnrolled } = require("../helpers");
+const { filterEnrolled } = require("../../services/helpers");
+const provideStudents = require("../../services/students");
 // populate first / last name columns, emails from enrolled students (google-auth)
 // create gists for individual with template (inside this folder?) (axios)
 
@@ -68,13 +70,15 @@ const populateTracker = async (sheets, students, spreadsheetId, config, cohort) 
   });
 };
 
-const createTracker = async (auth, students) => {
+const createTracker = async (auth) => {
   const sheets = google.sheets({ version: "v4", auth });
-  const configPath = path.resolve(__dirname, "../config.json");
+  const configPath = path.resolve(__dirname, "../../config/config.json");
   const config = JSON.parse(fs.readFileSync(configPath));
   const spreadsheetId = await createProgress(sheets, config, configPath);
+  const students = await provideStudents(auth);
   await copyTemplate(sheets, spreadsheetId);
   await populateTracker(sheets, students, spreadsheetId, config);
+  console.log(chalk.bold.green(`Report generated for ${config.config.cohort}!`))
 };
 
 module.exports = createTracker;

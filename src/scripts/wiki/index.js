@@ -14,16 +14,18 @@ const inquire = async (config) => {
       name: "unit",
     },
     {
-      message: `Please enter the name of your cohort, or press enter for your current cohort!`,
-      type: "input",
-      name: "cohort",
-      default: config.config.cohort,
+      message:
+        "Would you like to show all repos to students, or limit today's?",
+      type: "confirm",
+      name: "show",
+      default: true,
     },
   ]);
 };
 
-const buildLessons = async (auth, { unit, cohort }, config) => {
+const buildLessons = async (auth, unit, config) => {
   try {
+    const { cohort } = config.config;
     const sheets = google.sheets({ version: "v4", auth });
     const lessonsData = await sheets.spreadsheets.get({
       spreadsheetId: config.cohorts[cohort].curriculumRoadmap,
@@ -72,40 +74,60 @@ const buildDays = (lessons) => {
     [[]]
   );
   const realDays = separatedDays.filter((day) => day.length > 0);
-  const tableTime = table([
+  return realDays;
+};
+
+const createTable = (realDays, show) => {
+  return table([
     ["Date", "Type", "Repo", "Solution", "Recording"],
-    ...realDays
-      .flat()
-      .map((line) => [
-        line.date,
-        line.type,
-        line.link ? `[${line.name}](${line.link})` : line.name ? line.name : "",
-        line.solutionLink
-          ? `[${line.solution}](${line.solutionLink})`
-          : line.solution
-          ? `[${line.solution}](${line.link}/tree/solution)`
-          : "",
-        line.zoom,
-      ]),
+    ...realDays.flat().reduce(
+      (acc, line) => {
+        if (!show) {
+          if (acc.canReveal && line.date && line.date.includes("/")) {
+            const lessonDate = new Date(line.date);
+            if (lessonDate.getTime() > new Date().getTime()) {
+              acc.canReveal = false;
+            }
+          }
+        }
+        acc.lines.push([
+          line.date,
+          line.type,
+          line.link && acc.canReveal
+            ? `[${line.name}](${line.link})`
+            : line.name
+            ? line.name
+            : "",
+          line.solutionLink && acc.canReveal
+            ? `[${line.solution}](${line.solutionLink})`
+            : line.solution && acc.canReveal
+            ? `[${line.solution}](${line.link}/tree/solution)`
+            : "",
+          line.zoom,
+        ]);
+        return acc;
+      },
+      { lines: [], canReveal: true }
+    ).lines,
   ]);
-  return tableTime;
 };
 
 const createWiki = async (auth) => {
   const sheets = google.sheets({ version: "v4", auth });
   const config = JSON.parse(
-    fs.readFileSync(path.resolve(__dirname, "../config.json"))
+    fs.readFileSync(path.resolve(__dirname, "../../config/config.json"))
   );
-  const results = await inquire(config);
-  const lessons = await buildLessons(auth, results, config);
-  const days = buildDays(lessons);
-  const wikiFilename = `./wiki/${results.cohort}-${results.unit
-    .replace(/\ /g, "-")
-    .toLowerCase()}-wiki.md`;
+  const { show, unit } = await inquire(config);
+  const lessons = await buildLessons(auth, unit, config);
+  const realDays = buildDays(lessons);
+  const days = createTable(realDays, show);
+  const wikiFilename = `./src/scripts/wiki/${
+    config.config.cohort
+  }-${unit.replace(/\ /g, "-").toLowerCase()}-wiki.md`;
   fs.writeFileSync(wikiFilename, days);
   console.log(
-    `${chalk.bold.green(results.unit)} Wiki written for ${chalk.bold.green(
-      results.cohort
+    `${chalk.bold.green(unit)} Wiki written for ${chalk.bold.green(
+      config.config.cohort
     )} at ${chalk.bold.green(wikiFilename)}!`
   );
 };

@@ -1,15 +1,17 @@
 const { google } = require("googleapis");
 const axios = require("axios");
+const chalk = require("chalk");
 const fs = require("fs");
 const inquirer = require("inquirer");
 const path = require("path");
 
-const { filterEnrolled } = require("../helpers");
+const { filterEnrolled } = require("../../services/helpers");
+const provideStudents = require("../../services/students");
 // populate first / last name columns, emails from enrolled students (google-auth)
 // create gists for individual with template (inside this folder?) (axios)
 
 const createProject = async (sheets) => {
-  const configPath = path.resolve(__dirname, "../config.json");
+  const configPath = path.resolve(__dirname, "../../config/config.json");
   const config = JSON.parse(fs.readFileSync(configPath));
   const results = await inquirer.prompt([
     {
@@ -36,16 +38,9 @@ const createProject = async (sheets) => {
       name: "unit",
       message: "What unit is this project for?",
     },
-    {
-      message: `Please enter the name of your cohort, or press enter for your current cohort!`,
-      type: "input",
-      name: "cohort",
-      default: config.config.cohort,
-    },
-
   ]);
-  const cohort = results.cohort.split("-")[2].toUpperCase();
-  const title = `${cohort} | Project ${results.unit} Tracker`;
+  const shortName = config.config.cohort.split("-")[2].toUpperCase();
+  const title = `${shortName} | Project ${results.unit} Tracker`;
   const newSheet = await sheets.spreadsheets.create({
     resource: {
       properties: {
@@ -58,12 +53,12 @@ const createProject = async (sheets) => {
     ...config,
     cohorts: {
       ...config.cohorts,
-      [results.cohort]: {
-        ...config.cohorts[results.cohort],
-        [`project${results.unit}Tracker`]: spreadsheetId
-      }
-    }
-  }
+      [config.config.cohort]: {
+        ...config.cohorts[config.config.cohort],
+        [`project${results.unit}Tracker`]: spreadsheetId,
+      },
+    },
+  };
   fs.writeFileSync(configPath, JSON.stringify(newConfig));
   return spreadsheetId;
 };
@@ -84,8 +79,9 @@ const copyTemplate = async (sheets, destinationSpreadsheetId) => {
 
 const createGists = async (students) => {
   const feedback = fs.readFileSync(__dirname + "/default.md", "utf8");
-  const configPath = path.resolve(__dirname, "../config.json");
+  const configPath = path.resolve(__dirname, "../../config/config.json");
   const config = JSON.parse(fs.readFileSync(configPath));
+  console.log(`Creating gists for ${chalk.bold.green(students.length)} students!`);
   return Promise.all(
     students.map(async (stu) => {
       try {
@@ -115,7 +111,18 @@ const createGists = async (students) => {
   );
 };
 
-const populateTracker = async (sheets, students, spreadsheetId) => {
+const confirmOptions = async () => {
+  return inquirer.prompt([
+    {
+      type: "confirm",
+      message: "Would you like to create gists?",
+      name: "gists",
+      default: false,
+    },
+  ]);
+};
+
+const populateTracker = async (sheets, students, spreadsheetId, options) => {
   const enrolledStudents = filterEnrolled(students);
   const approvalColumns = enrolledStudents.map((stu, i) => ({
     majorDimension: "ROWS",
@@ -129,7 +136,9 @@ const populateTracker = async (sheets, students, spreadsheetId) => {
       valueInputOption: "USER_ENTERED",
     },
   });
-  const gists = await createGists(enrolledStudents);
+  const gists = options.gists
+    ? await createGists(enrolledStudents)
+    : new Array(enrolledStudents.length).fill("");
   const completionColumns = enrolledStudents.map((stu, i) => ({
     majorDimension: "ROWS",
     range: `Copy of Project Completions!A${i + 2}:F${i + 2}`,
@@ -144,11 +153,15 @@ const populateTracker = async (sheets, students, spreadsheetId) => {
   });
 };
 
-const createTracker = async (auth, students) => {
+const createTracker = async (auth) => {
   const sheets = google.sheets({ version: "v4", auth });
   const spreadsheetId = await createProject(sheets);
+  const destinationURL = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
+  console.log(`New project tracker written at ${chalk.bold.green(destinationURL)}!`);
+  const students = await provideStudents(auth);
   await copyTemplate(sheets, spreadsheetId);
-  await populateTracker(sheets, students, spreadsheetId);
+  const options = await confirmOptions();
+  await populateTracker(sheets, students, spreadsheetId, options);
 };
 
 module.exports = createTracker;
