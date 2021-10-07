@@ -11,7 +11,12 @@ function main() {
     then
       # CLONE
       echo "Cloning down $DIR."
-      git clone --single-branch --branch $3 "https://git.generalassemb.ly/$2/$1.git" --quiet $DIR
+      if [ -z $GOH_SSH ]
+      then
+        git clone --single-branch --branch $3 "git@git.generalassemb.ly:$2/$1.git" --quiet $DIR
+      else
+        git clone --single-branch --branch $3 "https://git.generalassemb.ly/$2/$1.git" --quiet $DIR
+      fi
       cd $DIR
     else
       # PULL FROM CURRENT BRANCH
@@ -72,6 +77,9 @@ fi
 while [[ "$1" =~ ^- && ! "$1" == "--" ]];
 do
   case $1 in
+    -s | --ssh)
+      GOH_SSH=1
+      ;;
     -l | --lunch)
       . lunch.txt
       ;;
@@ -130,7 +138,7 @@ do
     curl "https://git.generalassemb.ly/api/v3/repos/$COHORT/$REPO/pulls?state=all&per_page=100" -H "Authorization: token $TOKEN" 2>/dev/null |\
       jq '.[] | @uri "\(.user.login) \(.head.ref) \(.state)"' |\
       xargs -L 4 -I {} bash -c "main $REPO {}"
-    cd ../..
+          cd ../..
   fi
 
   printf "$RESET"
