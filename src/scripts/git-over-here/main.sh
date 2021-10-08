@@ -13,9 +13,9 @@ function main() {
       echo "Cloning down $DIR."
       if [ -z $GOH_SSH ]
       then
-        git clone --single-branch --branch $3 "git@git.generalassemb.ly:$2/$1.git" --quiet $DIR
-      else
         git clone --single-branch --branch $3 "https://git.generalassemb.ly/$2/$1.git" --quiet $DIR
+      else
+        git clone --single-branch --branch $3 "git@git.generalassemb.ly:$2/$1.git" --quiet $DIR
       fi
       cd $DIR
     else
