@@ -68,6 +68,7 @@ function main() {
 export -f main
 
 printf $RESET
+unset GOH_SSH
 
 if [ -z "$COHORT" ]
 then
