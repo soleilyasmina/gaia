@@ -1,4 +1,4 @@
-# Example repos for lunch.
+# Example repos for lunch. Add them within a file called lunch.txt.
 REPOS=(
   high-low-game
   duck-hunt

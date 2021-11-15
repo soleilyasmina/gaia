@@ -10,6 +10,14 @@ const provideStudents = require("../../services/students");
 // populate first / last name columns, emails from enrolled students (google-auth)
 // create gists for individual with template (inside this folder?) (axios)
 
+/**
+ * @func createProgress
+ * @desc creates Google sheet and adds to config
+ * @param {Object} sheets Google Sheets authorized interface.
+ * @param {Object} config The fetched config object from `src/config/config.json`.
+ * @param {String} configPath Path to write new config to.
+ * @returns 
+ */
 const createProgress = async (sheets, config, configPath) => {
   const niceTitle = config.config.cohort.split('-')[2].toUpperCase()
   const title = `${niceTitle} | Progress Report`;
@@ -35,6 +43,12 @@ const createProgress = async (sheets, config, configPath) => {
   return spreadsheetId; 
 };
 
+/**
+ * @func copyTemplate
+ * @desc Copy progress template into new sheet.
+ * @param {Object} sheets Google Sheets authorized interface.
+ * @param {String} destinationSpreadsheetId Id of spreadsheet to copy to.
+ */
 const copyTemplate = async (sheets, destinationSpreadsheetId) => {
   const request = (sheetId) => ({
     spreadsheetId: "11R7Z4P_CiMyofomZyZI7N-aZhh-mE_mqC3QqIQFD4CM",
@@ -46,6 +60,15 @@ const copyTemplate = async (sheets, destinationSpreadsheetId) => {
   await sheets.spreadsheets.sheets.copyTo(request(0));
 };
 
+/**
+ * @func populateTracker
+ * @desc add values to tracker
+ * @param {Object} sheets Google Sheets authorized interface.
+ * @param {Array} students A list of all the students.
+ * @param {String} spreadsheetId Id of tracker to populate.
+ * @param {Object} config The fetched config object from `src/config/config.json`.
+ * @param {String} cohort The current cohort.
+ */
 const populateTracker = async (sheets, students, spreadsheetId, config, cohort) => {
   const enrolledStudents = filterEnrolled(students);
   const extraInfo = await sheets.spreadsheets.get({
@@ -70,6 +93,11 @@ const populateTracker = async (sheets, students, spreadsheetId, config, cohort) 
   });
 };
 
+/**
+ * @func createTracker
+ * @desc Main function to create progress tracker.
+ * @param {Object} auth The authorization token from `src/services/auth.js`.
+ */
 const createTracker = async (auth) => {
   const sheets = google.sheets({ version: "v4", auth });
   const configPath = path.resolve(__dirname, "../../config/config.json");

@@ -16,9 +16,10 @@ Most of this toolkit is built in Node.js, apart from Git-Over-Here?
 There are a few quick conditions that need to be met before setting up.
 
 1. All repositories in the Homework Tracker must be linked if you want them to be graded. Provide the same link you would give someone if they were to clone down the repo themselves (without the .git extension, e.g. https://git.generalassemb.ly/sei-nyc-pizza/making-friends). By the same extension, if you don't want a certain homework in the sheet to change, don't link it.
+1. Your course tracker needs to follow the formats listed [here](./src/services/README.md).
 1. All students must have their GitHub enterprise usernames and e-mails in your course tracker.
 1. You must have a generalassemb.ly e-mail.
-1. You must have 2-step verification enabled.
+1. You must have 2-step verification enabled in your Google account.
 1. You must have a working version of Node on your machine.
 1. You must have a working installation of Homebrew (for `jq`).
 
@@ -30,7 +31,7 @@ Great question! Here are some set-up steps:
 
 Clone this repository onto your local machine. Once you have this repo cloned down, run `npm i`, and `brew install jq`. From then on, you can run `npm start` to set up your `config.json`. This will involve the following three steps:
 
-1. First, you'll have to activate the Google Sheets API. You can do so by following the link in the CLI on your General Assembly Google Account. Enable the Google Sheets API, name the app "GAIA", select "Desktop app", download the client configuration, and add the file to the `setup` folder.
+1. First, you'll have to activate the Google Sheets API. You can do so by following the link in the CLI on your General Assembly Google Account. Enable the Google Sheets API, name the app "GAIA", select "Desktop app", download the client configuration, and add the file to the `src/config` folder.
 2. After adding your credentials, run `npm start` to set up your config.json, which will have (among others) the following things:
     - __name__: your first name (for signing e-mails)
     - __pronouns__: your pronouns (for signing e-mails)
@@ -50,19 +51,7 @@ __GAIA__ comes with a number of tools for TAs, IAs, ILs, and homework graders al
 
 __Git Over Here__ is a shell script that allows you to clone down a large amount of repos at once, based on pull requests. This is the only non-Node.js part of this project, and as such requires an installation (via `brew`) of `jq`, a shell JSON parser. 
 
-To work with __Git Over Here__:
-
-```shell
-cd git-over-here
-./main.sh
-```
-
-In addition, if you want to keep a running list of repos to pull from instead of entering them at the menu prompt, you can add them to `git-over-here/lunch.txt`, and separate the names with new lines or spaces. To use this file as a reference, add the `-l` or `--lunch` flag.
-
-```shell
-cd git-over-here
-./main.sh --lunch
-```
+More on Git Over Here [in its README](./src/scripts/git-over-here/README.md).
 
 ### GHOST (Get Homework Onto Spreadsheet Tool)
 
@@ -100,6 +89,24 @@ To use this script, run `npm start` and select `feedback`.
 
 This script can be run as a test, by answering "Yes" to the test option. If selected, __Feedback__ will send you a sample feedback e-mail from the first student on your project tracker.
 
+### Progress
+
+__Progress__ is a script that reads the course tracker to create a progress tracking sheet with expectations, completions, and attendances for each student.
+
+To use this script, run `npm start` and select `progress`.
+
+### Puppetmaster 
+
+__Puppetmaster__ is a script that reads the progress tracker created above and creates links to send the feedback form to each student.
+
+To use this script, run `npm start` and select `puppetmaster`.
+
+### Exchange
+
+__Exchange__ is a script that reads through the curriculum roadmap and lets you know what repos need to be updated/forked/are ready.
+
+To use this script, run `npm start` and select `exchange`.
+
 ### Update
 
 __Update__ will ask you for your new cohort name, new course tracker spreadsheet id, and new curriculum roadmap to keep you moving between cohorts.
@@ -124,4 +131,4 @@ If you receive an error, it is most likely due to the way a student's e-mail is 
 
 ## Acknowledgments
 
-Thanks to Andre Pato (@anpato) for the base code for the mailer, as well as the pooled connection, to Jordan Cruz-Correa (@jordancruz) for improving the update feature, to Zulay Scottborgh (@zumariposa) and Shay Kelly (@shayk) for helping with updated link features and the wiki.
+Thanks to Andre Pato (@anpato) for the base code for the mailer, as well as the pooled connection, to Jordan Cruz-Correa (@jordancruz) for improving the update feature, to Zulay Scottborgh (@zumariposa) and Shay Kelley (@shayk) for helping with updated link features and the wiki.

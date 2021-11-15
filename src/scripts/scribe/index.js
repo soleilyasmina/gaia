@@ -4,6 +4,14 @@ const chalk = require("chalk");
 const { prompt } = require("inquirer");
 const path = require("path");
 
+/**
+ * @func buildLessons
+ * @desc Fetches lessons from the Curriculum Roadmap spreadsheet and reformats into object form.
+ * @param {Object} auth The authorization token from `src/services/auth.js`.
+ * @param {String} unit The unit to fetch from the Curriculum Roadmap.
+ * @param {Object} config The fetched config object from `src/config/config.json`.
+ * @returns {Array} A list of all planned in/post class exerclses exercises
+ */
 const buildLessons = async (auth, unit, config) => {
   try {
     const { cohort } = config.config;
@@ -31,6 +39,12 @@ const buildLessons = async (auth, unit, config) => {
   }
 };
 
+/**
+ * @func buildDays
+ * @desc Create full days out of groups of lessons.
+ * @param {Array} lessons List of all lessons / exercises taught / assigned.
+ * @returns Array of days with all lessons / exercises per day.
+ */
 const buildDays = (lessons) => {
   const [actualDays] = lessons.reduce(
     (acc, curr) => {
@@ -58,12 +72,27 @@ const buildDays = (lessons) => {
   return realDays;
 };
 
+/**
+ * @func isolateHomeworks
+ * @desc Remove all non-evening exercises.
+ * @param {Array} days 
+ * @returns {Array} A filtered array of the individual exercises.
+ */
 const isolateHomeworks = (days) => {
   return days.filter((day) =>
     day.some(({ type }) => ["EE", "EA", "ECS"].includes(type))
   );
 };
 
+/**
+ * @func createMessage
+ * @desc Create a message for a particular day based on the curriculum roadmap structured by SEI NYC.
+ * @author Soleil Solomon <soleil.solomon@generalassemb.ly>
+ * @author Shay Kelley <shay.kelley@generalassemb.ly>
+ * @author Zulay Scottborgh
+ * @author Zoe Peterson <zoe.peterson@generalassemb.ly>
+ * @param {Object} auth The authorization token from `src/services/auth.js`.
+ */
 const createMessage = async (auth) => {
   const sheets = google.sheets({ version: "v4", auth });
   const config = JSON.parse(
