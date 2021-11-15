@@ -7,7 +7,7 @@ auth.txt
 
 # Local Files
 src/scripts/git-over-here/homework/*/
-scr/scripts/git-over-here/lunch.txt
+src/scripts/git-over-here/lunch.txt
 src/scripts/wiki/*.md
 src/scripts/puppetmaster/*.md
 */.DS_Store
