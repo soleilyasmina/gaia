@@ -10,6 +10,12 @@ const provideStudents = require("../../services/students");
 // populate first / last name columns, emails from enrolled students (google-auth)
 // create gists for individual with template (inside this folder?) (axios)
 
+/**
+ * @func createProject
+ * @desc creates Google sheet and adds to config
+ * @param {Object} sheets Google Sheets authorized interface.
+ * @returns {String} The spreadsheet id of the created project.
+ */
 const createProject = async (sheets) => {
   const configPath = path.resolve(__dirname, "../../config/config.json");
   const config = JSON.parse(fs.readFileSync(configPath));
@@ -63,6 +69,12 @@ const createProject = async (sheets) => {
   return spreadsheetId;
 };
 
+/**
+ * @func copyTemplate
+ * @desc Copy progress template into new sheet.
+ * @param {Object} sheets Google Sheets authorized interface.
+ * @param {String} destinationSpreadsheetId Id of spreadsheet to copy to.
+ */
 const copyTemplate = async (sheets, destinationSpreadsheetId) => {
   const request = (sheetId) => ({
     spreadsheetId: "1DEBjv4eFZ2fLxBapAuzE2QLCfY0GNwQilr9ge7tJll8",
@@ -77,6 +89,12 @@ const copyTemplate = async (sheets, destinationSpreadsheetId) => {
   await sheets.spreadsheets.sheets.copyTo(request(979320693));
 };
 
+/**
+ * @func createGists
+ * @desc Creates a feedback gist for each student.
+ * @param {Array} students A list of all the students.
+ * @returns {Array} Promisifed created gists.
+ */
 const createGists = async (students) => {
   const feedback = fs.readFileSync(__dirname + "/default.md", "utf8");
   const configPath = path.resolve(__dirname, "../../config/config.json");
@@ -111,6 +129,11 @@ const createGists = async (students) => {
   );
 };
 
+/**
+ * @func confirmOptions
+ * @desc Create object for project tracking.
+ * @returns {Object} Options for creating project trackers.
+ */
 const confirmOptions = async () => {
   return inquirer.prompt([
     {
@@ -122,6 +145,14 @@ const confirmOptions = async () => {
   ]);
 };
 
+/**
+ * @func populateTracker
+ * @desc add values to tracker
+ * @param {Object} sheets Google Sheets authorized interface.
+ * @param {Array} students A list of all the students.
+ * @param {String} spreadsheetId Id of tracker to populate.
+ * @param {Object} options Options including whether or not to create gists.
+ */
 const populateTracker = async (sheets, students, spreadsheetId, options) => {
   const enrolledStudents = filterEnrolled(students);
   const approvalColumns = enrolledStudents.map((stu, i) => ({
@@ -153,6 +184,11 @@ const populateTracker = async (sheets, students, spreadsheetId, options) => {
   });
 };
 
+/**
+ * @func createTracker
+ * @desc Main function to create progress tracker.
+ * @param {Object} auth The authorization token from `src/services/auth.js`.
+ */
 const createTracker = async (auth) => {
   const sheets = google.sheets({ version: "v4", auth });
   const spreadsheetId = await createProject(sheets);

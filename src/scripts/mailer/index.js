@@ -62,7 +62,7 @@ const mailer = async (auth, test) => {
           });
           console.log(`Sending email to ${student.name} at ${student.email}.`);
           sent += 1;
-          if (sent === enrolledStudents.length) {
+          if (sent === selected.studentsToMail.length) {
             transporter.close();
             console.log("All Messages Sent");
           }

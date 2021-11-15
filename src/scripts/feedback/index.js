@@ -7,6 +7,15 @@ const path = require("path");
 
 require("dotenv").config();
 
+/**
+ * @func fillTemplate
+ * @desc replaces the template string with the student and instructor's information
+ * @param {Object} student the compiled student object
+ * @param {Number} unit the current unit
+ * @param {Object} config The fetched config object from `src/config/config.json`.
+ * @param {String} template the input string to replace items from
+ * @returns {String} the same string with the items replaced.
+ */
 const fillTemplate = (student, unit, config, template) =>
   template
     .replace("[FIRSTNAME]", student.firstName)
@@ -14,6 +23,14 @@ const fillTemplate = (student, unit, config, template) =>
     .replace("[GIST]", student.gist)
     .replace("[INSTRUCTORNAME]", `${config.config.name} (${config.config.pronouns.join('/')})`);
 
+/**
+ * @func mailer
+ * @desc Mails all reports to students.
+ * @param {Array} students the array of enrolled students
+ * @param {Number} unit The current unit.
+ * @param {Object} config The fetched config object from `src/config/config.json`.
+ * @param {Boolean} test Whether or not we are testing the current script.
+ */
 const mailer = async (students, unit, config, test) => {
   try {
     const template = fs.readFileSync(__dirname + "/template.txt", "utf8");
@@ -62,6 +79,14 @@ const mailer = async (students, unit, config, test) => {
   }
 };
 
+/**
+ * @func buildStudents
+ * @desc obtain student information and filter out unimportant information.
+ * @param {Object} auth The authorization token from `src/services/auth.js`.
+ * @param {Number} unit The current unit.
+ * @param {Object} config The fetched config object from `src/config/config.json`.
+ * @returns {Array} an array of the current cohort's student information
+ */
 const buildStudents = async (auth, unit, config) => {
   try {
     const sheets = google.sheets({ version: "v4", auth });
@@ -85,6 +110,13 @@ const buildStudents = async (auth, unit, config) => {
   }
 };
 
+/**
+ * @func deliverFeedback
+ * @author Soleil Solomon <soleil.solomon@generalassemb.ly>
+ * @desc A feedback delivering script.
+ * @param {Object} auth The authorization token from `src/services/auth.js`.
+ * @param {Boolean} test Whether or not we are testing the current script.
+ */
 const deliverFeedback = async (auth, test) => {
   const configPath = path.resolve(__dirname, "../../config/config.json");
   const config = JSON.parse(fs.readFileSync(configPath));

@@ -7,6 +7,12 @@ const provideStudents = require('../../services/students');
 
 const BASE_URL = 'https://git.generalassemb.ly';
 
+/**
+ * @func toColumn
+ * @desc Converts column index to Google Spreadsheets format.
+ * @param {Number} num Index of column.
+ * @returns Converted index to Google Spreadsheets column (A-ZZ)
+ */
 const toColumn = num => {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   let counter = num;
@@ -24,6 +30,13 @@ const toColumn = num => {
   return column;
 };
 
+/**
+ * @func parsePullRequestJSON
+ * @desc Return completion statues and orig
+ * @param {String} link The link listed in row 5 of the HW Completion sheet.
+ * @param {Object} config The fetched config object from `src/config/config.json`.
+ * @returns {Array} Completion statuses and GitHub usernames for each student.
+ */
 const parsePullRequestJSON = async (link, config) => {
   if (link === undefined) return [];
   const [organization, repository] = link
@@ -49,6 +62,13 @@ const parsePullRequestJSON = async (link, config) => {
   }
 };
 
+/**
+ * @func createColumns 
+ * @desc Create all columns to send to Google Spreadsheets as an update.
+ * @param {Array} students A list of all the students.
+ * @param {Object} config The fetched config object from `src/config/config.json`.
+ * @returns {Array} All columns to send to Google Spreadsheets to update.
+ */
 const createColumns = async (students, config) => {
   const assignments = students[0].submissions.map((stu) => stu.link);
   const columns = await Promise.all(
@@ -95,6 +115,16 @@ const createColumns = async (students, config) => {
   return definedColumns;
 };
 
+/**
+ * @func GHOST
+ * @author Soleil Solomon <soleil.solomon@generalassemb.ly>
+ * @author Andre Pato <andre.pato@generalassemb.ly>
+ * @author Jordan Cruz-Correa
+ * @author Tran Luong
+ * @desc GHOST (Get Homework Onto Spreadsheet Tool) reads in all repos listed in the assignments (with the format https://git.generalassemb.ly/<cohort>/<repo>), checks completion based on the PR being closed (complete), the PR being open (incomplete), or no PR existing at all (missing). When run with the test option, it'll inform you all columns eligible for update.
+ * @param {Object} auth The authorization token from `src/services/auth.js`.
+ * @param {Boolean} test Whether or not we are testing the current script.
+ */
 const ghost = async (auth, test) => {
   const configPath = path.resolve(__dirname, "../../config/config.json");
   const config = JSON.parse(fs.readFileSync(configPath));

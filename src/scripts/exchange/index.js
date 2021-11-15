@@ -4,9 +4,12 @@ const axios = require("axios");
 const chalk = require("chalk");
 const { prompt } = require("inquirer");
 const path = require("path");
-const table = require("markdown-table");
 
-const inquire = async (config) => {
+/**
+ * @func inquire Ask user what unit / repos they'd like to update in the syllabus.
+ * @returns {Object} The unit to make the wiki for.
+ */
+const inquire = async () => {
   return prompt([
     {
       message: "What unit do you want to make this wiki for?",
@@ -17,6 +20,14 @@ const inquire = async (config) => {
   ]);
 };
 
+/**
+ * @func buildLessons
+ * @desc Fetches lessons from the Curriculum Roadmap spreadsheet and reformats into object form.
+ * @param {Object} auth The authorization token from `src/services/auth.js`.
+ * @param {String} units The units to fetch from the Curriculum Roadmap.
+ * @param {Object} config The fetched config object from `src/config/config.json`.
+ * @returns {Array} A list of all planned in/post class exerclses exercises
+ */
 const buildLessons = async (auth, units, config) => {
   try {
     const { cohort } = config.config;
@@ -54,6 +65,12 @@ const buildLessons = async (auth, units, config) => {
   }
 };
 
+/**
+ * @func createUrl
+ * @desc Reformat url for commit messages.
+ * @param {String} url 
+ * @returns Newly formatted URL.
+ */
 const createUrl = (url) =>
   url
     .replace(
@@ -62,6 +79,11 @@ const createUrl = (url) =>
     )
     .concat("/commits");
 
+/**
+ * 
+ * @param {Object} lesson Object with info on a given lesson
+ * @param {Object} config The fetched config object from `src/config/config.json`.
+ */
 const createComparisons = async (lesson, config) => {
   const mainResp = await axios.get(createUrl(lesson.mainLink), {
     headers: {
@@ -88,8 +110,13 @@ const createComparisons = async (lesson, config) => {
   }
 };
 
+/**
+ * @func exchange
+ * @author Soleil Solomon <soleil.solomon@generalassemb.ly>
+ * @desc A curriculum updater tool that compares existing repos in a roadmap with their master link.
+ * @param {Object} auth The authorization token from `src/services/auth.js`.
+ */
 const exchange = async (auth) => {
-  const sheets = google.sheets({ version: "v4", auth });
   const config = JSON.parse(
     fs.readFileSync(path.resolve(__dirname, "../../config/config.json"))
   );

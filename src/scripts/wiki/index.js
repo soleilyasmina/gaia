@@ -5,7 +5,11 @@ const { prompt } = require("inquirer");
 const path = require("path");
 const table = require("markdown-table");
 
-const inquire = async (config) => {
+/**
+ * @func inquire Ask user what unit / repos they'd like to make the syllabus for.
+ * @returns {Object} The unit to make the wiki for, and whether or not to show current repos.
+ */
+const inquire = async () => {
   return prompt([
     {
       message: "What unit do you want to make this wiki for?",
@@ -23,6 +27,14 @@ const inquire = async (config) => {
   ]);
 };
 
+/**
+ * @func buildLessons
+ * @desc Fetches lessons from the Curriculum Roadmap spreadsheet and reformats into object form.
+ * @param {Object} auth The authorization token from `src/services/auth.js`.
+ * @param {String} unit The unit to fetch from the Curriculum Roadmap.
+ * @param {Object} config The fetched config object from `src/config/config.json`.
+ * @returns {Array} A list of all planned in/post class exerclses exercises
+ */
 const buildLessons = async (auth, unit, config) => {
   try {
     const { cohort } = config.config;
@@ -50,6 +62,12 @@ const buildLessons = async (auth, unit, config) => {
   }
 };
 
+/**
+ * @func buildDays
+ * @desc Create full days out of groups of lessons.
+ * @param {Array} lessons List of all lessons / exercises taught / assigned.
+ * @returns Array of days with all lessons / exercises per day.
+ */
 const buildDays = (lessons) => {
   const [actualDays] = lessons.reduce(
     (acc, curr) => {
@@ -77,6 +95,13 @@ const buildDays = (lessons) => {
   return realDays;
 };
 
+/**
+ * @func createTable
+ * @desc Creates table from list of days, and links depending on if full show is allowed.
+ * @param {*} realDays 
+ * @param {*} show 
+ * @returns 
+ */
 const createTable = (realDays, show) => {
   return table([
     ["Date", "Type", "Repo", "Solution", "Recording"],
@@ -112,6 +137,15 @@ const createTable = (realDays, show) => {
   ]);
 };
 
+/**
+ * @func createWiki
+ * @desc Create a syllabus for a particular unit based on the curriculum roadmap structured by SEI NYC.
+ * @author Soleil Solomon <soleil.solomon@generalassemb.ly>
+ * @author Shay Kelley <shay.kelley@generalassemb.ly>
+ * @author Zulay Scottborgh
+ * @author Zoe Peterson <zoe.peterson@generalassemb.ly>
+ * @param {Object} auth The authorization token from `src/services/auth.js`.
+ */
 const createWiki = async (auth) => {
   const sheets = google.sheets({ version: "v4", auth });
   const config = JSON.parse(

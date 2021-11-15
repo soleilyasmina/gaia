@@ -1,7 +1,12 @@
-const fs = require("fs");
 const { filterEnrolled } = require("../../services/helpers");
 const provideStudents = require("../../services/students");
 
+/**
+ * @func createHomeworkCompletions
+ * @desc Create formatted string of homework submissions.
+ * @param {Array} submissions Array of all homework submissions per student.
+ * @returns {String} Formatted string of homework submissions.
+ */
 const createHomeworkCompletions = (submissions) => {
   const { Complete, Incomplete, Missing }= submissions
     .reduce(
@@ -21,6 +26,11 @@ const createHomeworkCompletions = (submissions) => {
   return formattedString;
 };
 
+/**
+ * @func createStatus
+ * @desc Print a quick status update on all students.
+ * @param {Object} auth The authorization token from `src/services/auth.js`.
+ */
 const createStatus = async (auth) => {
   const students = await provideStudents(auth);
   const filteredInfo = filterEnrolled(students).map((student) => ({

@@ -1,5 +1,0 @@
-# Example repos for lunch.
-REPOS=(
-  candies
-  birds-express-routes
-)

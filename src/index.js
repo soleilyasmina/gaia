@@ -15,8 +15,7 @@ const status = require("./scripts/status");
 const update = require("./scripts/update");
 const wiki = require("./scripts/wiki");
 const { filterEnrolled } = require("./services/helpers");
-const { authorize, getNewToken } = require('./services/auth');
-const provideStudents = require("./services/students");
+const { authorize } = require('./services/auth');
 
 const main = async () => {
   try {
@@ -42,7 +41,6 @@ const main = async () => {
             "feedback",
             "progress",
             "puppetmaster",
-            new Separator(),
             "exchange",
             new Separator(),
             "config",
