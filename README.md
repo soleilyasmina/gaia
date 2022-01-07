@@ -132,3 +132,4 @@ If you receive an error, it is most likely due to the way a student's e-mail is 
 ## Acknowledgments
 
 Thanks to Andre Pato (@anpato) for the base code for the mailer, as well as the pooled connection, to Jordan Cruz-Correa (@jordancruz) for improving the update feature, to Zulay Scottborgh (@zumariposa) and Shay Kelley (@shayk) for helping with updated link features and the wiki.
+
